@@ -1,17 +1,66 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const RandomLocationStreetView = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [randomLocation, setRandomLocation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [currentFOV, setCurrentFOV] = useState(10); // Start med MYCKET inzoomad bild
   
-  // ERSÄTT MED DIN API-NYCKEL
-  const API_KEY = "AIzaSyC-8O9gK-7jLWE7iorMhwwSb4wTIIQt5ks";
 
-  // Hämta användarens GPS-position
+  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  // Timer-effekt som kör när spelet startar
+  useEffect(() => {
+    let interval;
+    
+    if (gameStarted) {
+      interval = setInterval(() => {
+        setTimeElapsed(prevTime => {
+          const newTime = prevTime + 1;
+          
+          // Beräkna ny FOV baserat på tid
+          let newFOV;
+          if (newTime <= 60) {
+            // Första minuten: 10° FOV (MYCKET inzoomad)
+            newFOV = 10;
+          } else if (newTime <= 120) {
+            // Andra minuten: 45° FOV (medium zoom)
+            newFOV = 45;
+          } else {
+            // Efter 2 minuter: 90° FOV (utzoomad)
+            newFOV = 90;
+          }
+          
+          setCurrentFOV(newFOV);
+          return newTime;
+        });
+      }, 1000); // Uppdatera varje sekund
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [gameStarted]);
+
+  // Starta spelet
+  const startGame = () => {
+    setGameStarted(true);
+    setTimeElapsed(0);
+    setCurrentFOV(10); // Börja MYCKET inzoomad
+    getRandomNearbyLocation();
+  };
+
+  // Stoppa spelet
+  const stopGame = () => {
+    setGameStarted(false);
+    setTimeElapsed(0);
+    setCurrentFOV(10);
+  };
   const getUserLocation = () => {
     setLoading(true);
     setError(null);
@@ -88,9 +137,23 @@ const RandomLocationStreetView = () => {
     console.log(`🎯 Slumpad plats exakt ${exactDistance}m bort:`, randomCoord);
   };
 
-  // Generera Street View URL
+  // Generera Street View URL med dynamisk FOV
   const getStreetViewURL = (lat, lng) => {
-    return `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${lat},${lng}&heading=0&pitch=0&fov=90&key=${API_KEY}`;
+    return `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${lat},${lng}&heading=0&pitch=0&fov=${currentFOV}&key=${API_KEY}`;
+  };
+
+  // Formatera tid som MM:SS
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Få zoom-beskrivning baserat på FOV
+  const getZoomDescription = (fov) => {
+    if (fov <= 15) return "🔍 EXTREM zoom (mycket svår!)";
+    if (fov <= 50) return "👁️ Medium zoom";
+    return "🌐 Utzoomad (lätt)";
   };
 
   return (
@@ -123,53 +186,150 @@ const RandomLocationStreetView = () => {
         )}
       </div>
 
-      {/* Slumpa plats på exakt 250m avstånd */}
+      {/* Spel-kontroller */}
       {userLocation && (
         <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '8px' }}>
-          <h3>Steg 2: Slumpa plats exakt 250m bort</h3>
-          <button
-            onClick={getRandomNearbyLocation}
-            style={{ 
-              padding: '12px 24px', 
-              backgroundColor: '#fd7e14', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '6px',
-              fontSize: '16px',
-              cursor: 'pointer'
-            }}
-          >
-            🎯 Slumpa plats (250m)
-          </button>
+          <h3>🎮 Spel-kontroller</h3>
+          
+          {!gameStarted ? (
+            <button
+              onClick={startGame}
+              style={{ 
+                padding: '12px 24px', 
+                backgroundColor: '#28a745', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '6px',
+                fontSize: '16px',
+                cursor: 'pointer'
+              }}
+            >
+              🚀 Starta spel (250m challenge)
+            </button>
+          ) : (
+            <div>
+              <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '15px' }}>
+                <div style={{ 
+                  padding: '10px 15px', 
+                  backgroundColor: '#17a2b8', 
+                  color: 'white', 
+                  borderRadius: '6px',
+                  fontWeight: 'bold',
+                  fontSize: '18px'
+                }}>
+                  ⏱️ {formatTime(timeElapsed)}
+                </div>
+                
+                <div style={{ 
+                  padding: '10px 15px', 
+                  backgroundColor: '#6f42c1', 
+                  color: 'white', 
+                  borderRadius: '6px',
+                  fontWeight: 'bold'
+                }}>
+                  {getZoomDescription(currentFOV)}
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  onClick={startGame}
+                  style={{ 
+                    padding: '8px 16px', 
+                    backgroundColor: '#fd7e14', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🎯 Ny plats
+                </button>
+                
+                <button
+                  onClick={stopGame}
+                  style={{ 
+                    padding: '8px 16px', 
+                    backgroundColor: '#dc3545', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ⏹️ Stoppa
+                </button>
+              </div>
+            </div>
+          )}
 
-          {randomLocation && (
-            <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#d1ecf1', borderRadius: '4px' }}>
-              🎲 <strong>Slumpad plats (exakt {randomLocation.distance}m bort):</strong><br />
-              {randomLocation.lat.toFixed(6)}, {randomLocation.lng.toFixed(6)}
+          {randomLocation && gameStarted && (
+            <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#d1ecf1', borderRadius: '4px' }}>
+              🎲 <strong>Hemlig plats (exakt {randomLocation.distance}m bort)</strong><br />
+              <small>Koordinater: {randomLocation.lat.toFixed(6)}, {randomLocation.lng.toFixed(6)}</small>
             </div>
           )}
         </div>
       )}
 
-      {/* Street View bild */}
-      {randomLocation && (
+      {/* Street View bild med dynamisk zoom */}
+      {randomLocation && gameStarted && (
         <div style={{ marginBottom: '20px' }}>
-          <h3>Steg 3: Street View av slumpad plats</h3>
+          <h3>🔍 Street View - Var är du?</h3>
           <img
+            key={`${randomLocation.lat}-${randomLocation.lng}-${currentFOV}`} // Force re-render när FOV ändras
             src={getStreetViewURL(randomLocation.lat, randomLocation.lng)}
-            alt="Slumpad Street View"
+            alt="Gissa platsen!"
             style={{
               width: '100%',
               maxWidth: '600px',
-              border: '2px solid #ccc',
-              borderRadius: '8px'
+              border: '3px solid #007bff',
+              borderRadius: '8px',
+              transition: 'border-color 0.3s ease'
             }}
             onError={() => setError('Street View inte tillgänglig för denna plats')}
           />
           
-          <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
-            <strong>Street View URL:</strong><br />
-            {getStreetViewURL(randomLocation.lat, randomLocation.lng)}
+          <div style={{ 
+            marginTop: '10px', 
+            padding: '10px', 
+            backgroundColor: '#e7f3ff', 
+            borderRadius: '6px',
+            border: '1px solid #007bff'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span><strong>Zoom-progression:</strong></span>
+              <span><strong>FOV: {currentFOV}°</strong></span>
+            </div>
+            <div style={{ marginTop: '8px' }}>
+              <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                <div style={{ 
+                  width: '60px', 
+                  height: '8px', 
+                  backgroundColor: timeElapsed <= 60 ? '#28a745' : '#e9ecef',
+                  borderRadius: '4px'
+                }}></div>
+                <span style={{ fontSize: '12px' }}>0-1min: EXTREM zoom (10°)</span>
+              </div>
+              <div style={{ display: 'flex', gap: '5px', alignItems: 'center', marginTop: '4px' }}>
+                <div style={{ 
+                  width: '60px', 
+                  height: '8px', 
+                  backgroundColor: timeElapsed > 60 && timeElapsed <= 120 ? '#ffc107' : '#e9ecef',
+                  borderRadius: '4px'
+                }}></div>
+                <span style={{ fontSize: '12px' }}>1-2min: Medium (45°)</span>
+              </div>
+              <div style={{ display: 'flex', gap: '5px', alignItems: 'center', marginTop: '4px' }}>
+                <div style={{ 
+                  width: '60px', 
+                  height: '8px', 
+                  backgroundColor: timeElapsed > 120 ? '#dc3545' : '#e9ecef',
+                  borderRadius: '4px'
+                }}></div>
+                <span style={{ fontSize: '12px' }}>2min+: Utzoomad (90°)</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -188,21 +348,21 @@ const RandomLocationStreetView = () => {
         </div>
       )}
 
-      {/* Förklaring */}
       <div style={{ marginTop: '30px', padding: '15px', backgroundColor: '#e2e3e5', borderRadius: '8px' }}>
-        <h4>🔍 Hur det fungerar:</h4>
+        <h4>🎮 Spelregler:</h4>
         <ol>
-          <li><strong>GPS:</strong> Hämtar din exakta position med Geolocation API</li>
-          <li><strong>Matematik:</strong> Genererar slumpmässiga koordinater inom angiven radie</li>
-          <li><strong>Street View:</strong> Skickar koordinaterna till Google Street View API</li>
-          <li><strong>Resultat:</strong> Visar en bild från den slumpade platsen</li>
+          <li><strong>Starta spel:</strong> Få din position och slumpa en plats 250m bort</li>
+          <li><strong>Första minuten:</strong> EXTREM zoom (FOV 10°) - nästan omöjligt att gissa!</li>
+          <li><strong>Andra minuten:</strong> Medium zoom (FOV 45°) - börjar bli synligt</li>
+          <li><strong>Efter 2 minuter:</strong> Utzoomad (FOV 90°) - lättast att gissa</li>
+          <li><strong>Mål:</strong> Gissa var bilden är tagen och gå dit!</li>
         </ol>
         
-        <p><strong>Formeln för slumpmässiga koordinater:</strong></p>
+        <p><strong>🔍 FOV (Field of View) förklaring:</strong></p>
         <ul>
-          <li>Konvertera meter → grader (1 grad ≈ 111,320 meter)</li>
-          <li>Slumpmässig vinkel (0-360°) och avstånd</li>
-          <li>Beräkna nya lat/lng med trigonometri</li>
+          <li><strong>10°:</strong> Som att titta genom en kikare - ser bara en liten detalj!</li>
+          <li><strong>45°:</strong> Något inzoomad - ser lite mer</li>
+          <li><strong>90°:</strong> Bred vy - ser hela omgivningen</li>
         </ul>
       </div>
     </div>
