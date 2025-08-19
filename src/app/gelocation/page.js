@@ -2,92 +2,179 @@
 
 import React, { useState } from 'react';
 
-const GeolocationExample = () => {
-  const [location, setLocation] = useState(null);
+const RandomLocationStreetView = () => {
+  const [userLocation, setUserLocation] = useState(null);
+  const [randomLocation, setRandomLocation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // ERSÄTT MED DIN API-NYCKEL
+  const API_KEY = "AIzaSyC-8O9gK-7jLWE7iorMhwwSb4wTIIQt5ks";
 
-  // Funktion för att hämta användarens position
+  // Hämta användarens GPS-position
   const getUserLocation = () => {
     setLoading(true);
     setError(null);
 
-    // Kontrollera om Geolocation API stöds
     if (!navigator.geolocation) {
-      setError('Geolocation stöds inte av din webbläsare');
+      setError('Geolocation stöds inte');
       setLoading(false);
       return;
     }
 
-    // Hämta position
     navigator.geolocation.getCurrentPosition(
-      // Framgång - position hämtad
       (position) => {
-        const userLocation = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: new Date(position.timestamp)
+        const location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
         };
-        
-        setLocation(userLocation);
+        setUserLocation(location);
         setLoading(false);
-        console.log('📍 Position hämtad:', userLocation);
+        console.log('📍 Din position:', location);
       },
-      
-      // Fel - kunde inte hämta position
       (error) => {
-        let errorMessage = 'Okänt fel';
-        
-        switch(error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage = 'Användaren nekade tillåtelse till platsdata';
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage = 'Platsdata är inte tillgänglig';
-            break;
-          case error.TIMEOUT:
-            errorMessage = 'Timeout - tog för lång tid att hämta position';
-            break;
-        }
-        
-        setError(errorMessage);
+        setError('Kunde inte hämta din position');
         setLoading(false);
-        console.error('❌ Geolocation fel:', errorMessage);
+        console.error('GPS fel:', error);
       },
-      
-      // Inställningar för geolocation
       {
-        enableHighAccuracy: true,  // Använd GPS för högre precision
-        timeout: 10000,           // Max 10 sekunder timeout
-        maximumAge: 60000         // Använd cachad position i max 1 minut
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
       }
     );
   };
 
+  // Generera slumpmässig koordinat på EXAKT avstånd (inte inom radie)
+  const generateRandomLocation = (centerLat, centerLng, exactDistanceMeters) => {
+    // Konvertera meter till grader (ungefär)
+    const radiusInDegrees = exactDistanceMeters / 111320;
+    
+    // Slumpmässig vinkel (0-360 grader)
+    const angle = Math.random() * 2 * Math.PI;
+    
+    // Använd EXAKT avstånd (inte slumpmässigt)
+    const distance = radiusInDegrees;
+    
+    // Beräkna nya koordinater
+    const deltaLat = distance * Math.cos(angle);
+    const deltaLng = distance * Math.sin(angle) / Math.cos(centerLat * Math.PI / 180);
+    
+    return {
+      lat: centerLat + deltaLat,
+      lng: centerLng + deltaLng
+    };
+  };
+
+  // Slumpa en plats på exakt 250 meter från din position
+  const getRandomNearbyLocation = () => {
+    if (!userLocation) {
+      setError('Hämta din position först!');
+      return;
+    }
+
+    const exactDistance = 250; // Alltid 250 meter
+    const randomCoord = generateRandomLocation(
+      userLocation.lat,
+      userLocation.lng,
+      exactDistance
+    );
+
+    setRandomLocation({
+      ...randomCoord,
+      distance: exactDistance
+    });
+
+    console.log(`🎯 Slumpad plats exakt ${exactDistance}m bort:`, randomCoord);
+  };
+
+  // Generera Street View URL
+  const getStreetViewURL = (lat, lng) => {
+    return `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${lat},${lng}&heading=0&pitch=0&fov=90&key=${API_KEY}`;
+  };
+
   return (
-    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
-      <h1>📍 Geolocation API Tutorial</h1>
-      
-      <div style={{ marginBottom: '20px' }}>
-        <button 
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <h1>🎯 GPS + Slumpad Street View</h1>
+
+      {/* Hämta GPS-position */}
+      <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3>Steg 1: Hämta din position</h3>
+        <button
           onClick={getUserLocation}
           disabled={loading}
           style={{
             padding: '12px 24px',
-            fontSize: '16px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
+            backgroundColor: loading ? '#ccc' : '#28a745',
             color: 'white',
             border: 'none',
             borderRadius: '6px',
-            cursor: loading ? 'not-allowed' : 'pointer'
+            cursor: loading ? 'not-allowed' : 'pointer',
+            fontSize: '16px'
           }}
         >
-          {loading ? '📡 Hämtar position...' : '📍 Hämta min position'}
+          {loading ? '📡 Hämtar...' : '📍 Hitta min position'}
         </button>
+
+        {userLocation && (
+          <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#d4edda', borderRadius: '4px' }}>
+            ✅ <strong>Din position:</strong> {userLocation.lat.toFixed(6)}, {userLocation.lng.toFixed(6)}
+          </div>
+        )}
       </div>
 
-      {/* Fel-meddelande */}
+      {/* Slumpa plats på exakt 250m avstånd */}
+      {userLocation && (
+        <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '8px' }}>
+          <h3>Steg 2: Slumpa plats exakt 250m bort</h3>
+          <button
+            onClick={getRandomNearbyLocation}
+            style={{ 
+              padding: '12px 24px', 
+              backgroundColor: '#fd7e14', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '6px',
+              fontSize: '16px',
+              cursor: 'pointer'
+            }}
+          >
+            🎯 Slumpa plats (250m)
+          </button>
+
+          {randomLocation && (
+            <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#d1ecf1', borderRadius: '4px' }}>
+              🎲 <strong>Slumpad plats (exakt {randomLocation.distance}m bort):</strong><br />
+              {randomLocation.lat.toFixed(6)}, {randomLocation.lng.toFixed(6)}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Street View bild */}
+      {randomLocation && (
+        <div style={{ marginBottom: '20px' }}>
+          <h3>Steg 3: Street View av slumpad plats</h3>
+          <img
+            src={getStreetViewURL(randomLocation.lat, randomLocation.lng)}
+            alt="Slumpad Street View"
+            style={{
+              width: '100%',
+              maxWidth: '600px',
+              border: '2px solid #ccc',
+              borderRadius: '8px'
+            }}
+            onError={() => setError('Street View inte tillgänglig för denna plats')}
+          />
+          
+          <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+            <strong>Street View URL:</strong><br />
+            {getStreetViewURL(randomLocation.lat, randomLocation.lng)}
+          </div>
+        </div>
+      )}
+
+      {/* Felmeddelanden */}
       {error && (
         <div style={{
           padding: '12px',
@@ -95,64 +182,31 @@ const GeolocationExample = () => {
           color: '#721c24',
           border: '1px solid #f5c6cb',
           borderRadius: '6px',
-          marginBottom: '20px'
+          marginTop: '10px'
         }}>
-          ❌ <strong>Fel:</strong> {error}
-        </div>
-      )}
-
-      {/* Position-information */}
-      {location && (
-        <div style={{
-          padding: '15px',
-          backgroundColor: '#d4edda',
-          color: '#155724',
-          border: '1px solid #c3e6cb',
-          borderRadius: '6px',
-          marginBottom: '20px'
-        }}>
-          <h3>✅ Position hämtad!</h3>
-          <p><strong>Latitud:</strong> {location.latitude.toFixed(6)}</p>
-          <p><strong>Longitud:</strong> {location.longitude.toFixed(6)}</p>
-          <p><strong>Noggrannhet:</strong> ±{Math.round(location.accuracy)} meter</p>
-          <p><strong>Tid:</strong> {location.timestamp.toLocaleString('sv-SE')}</p>
+          ❌ {error}
         </div>
       )}
 
       {/* Förklaring */}
-      <div style={{
-        padding: '15px',
-        backgroundColor: '#f8f9fa',
-        border: '1px solid #dee2e6',
-        borderRadius: '6px'
-      }}>
-        <h3>🔍 Hur Geolocation API fungerar:</h3>
+      <div style={{ marginTop: '30px', padding: '15px', backgroundColor: '#e2e3e5', borderRadius: '8px' }}>
+        <h4>🔍 Hur det fungerar:</h4>
+        <ol>
+          <li><strong>GPS:</strong> Hämtar din exakta position med Geolocation API</li>
+          <li><strong>Matematik:</strong> Genererar slumpmässiga koordinater inom angiven radie</li>
+          <li><strong>Street View:</strong> Skickar koordinaterna till Google Street View API</li>
+          <li><strong>Resultat:</strong> Visar en bild från den slumpade platsen</li>
+        </ol>
         
-        <h4>1. Kontrollera stöd:</h4>
-        <code style={{ backgroundColor: '#e9ecef', padding: '2px 4px' }}>
-          if (!navigator.geolocation)
-        </code>
-        
-        <h4>2. Hämta position:</h4>
-        <code style={{ backgroundColor: '#e9ecef', padding: '2px 4px' }}>
-          navigator.geolocation.getCurrentPosition()
-        </code>
-        
-        <h4>3. Hantera resultat:</h4>
+        <p><strong>Formeln för slumpmässiga koordinater:</strong></p>
         <ul>
-          <li><strong>Framgång:</strong> position.coords.latitude/longitude</li>
-          <li><strong>Fel:</strong> error.code och error.message</li>
-        </ul>
-        
-        <h4>4. Vanliga fel:</h4>
-        <ul>
-          <li><strong>PERMISSION_DENIED:</strong> Användaren sa nej</li>
-          <li><strong>POSITION_UNAVAILABLE:</strong> GPS fungerar inte</li>
-          <li><strong>TIMEOUT:</strong> Tog för lång tid</li>
+          <li>Konvertera meter → grader (1 grad ≈ 111,320 meter)</li>
+          <li>Slumpmässig vinkel (0-360°) och avstånd</li>
+          <li>Beräkna nya lat/lng med trigonometri</li>
         </ul>
       </div>
     </div>
   );
 };
 
-export default GeolocationExample;
+export default RandomLocationStreetView;
