@@ -1,6 +1,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --Summerday: #F8F251;
+  --Morning-sky: #CBD9F4;
+  --Midnight-blue-100: #002732;
+  --Midnight-blue-75: rgba(0, 39, 50, 0.75);
+  --Midnight-blue-50: rgba(0, 39, 50, 0.50);
 }
 
 @media (prefers-color-scheme: dark) {

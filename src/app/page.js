@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Timer from '../components/Timer';
+import Timer from '../components/Timer/Timer';
 import StreetViewDisplay from '../components/StreetViewDisplay/StreetViewDisplay';
 
 export default function Page() {
