@@ -1,0 +1,26 @@
+.gameSection {
+    width: 100%;
+    padding: 1rem; /* eller vilken padding du vill ha */
+    box-sizing: border-box;
+}
+
+.gameUi {
+    display: flex;
+    padding-bottom: 1.5rem;
+    padding: 1.5rem;
+    justify-content: space-between;
+}
+
+.imgDisplay {
+    width: 100%;
+    height: auto;
+    overflow: hidden; /* förhindrar overflow */
+    border-radius: 15px;
+}
+
+
+.buttomUi {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1.2rem;
+}
