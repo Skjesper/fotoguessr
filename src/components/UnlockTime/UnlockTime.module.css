@@ -1,0 +1,45 @@
+
+
+.unlockTimeSection {
+
+display: flex;
+width: 4.25rem;
+height: 4.875rem;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+flex-shrink: 0;
+}
+
+.text {
+color: var(--Sandstone, #5E5C20);
+text-align: center;
+font-family: Buvera;
+font-size: 1rem;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+
+}
+
+
+.unlockTime {
+  color: var(--Summerday, #F8F251);
+text-align: center;
+font-family: Buvera;
+font-size: 1rem;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+letter-spacing: 0.1rem;
+display: flex;
+height: 2.875rem;
+padding: 0.625rem;
+justify-content: center;
+align-items: center;
+gap: 0.625rem;
+flex-shrink: 0;
+align-self: stretch;
+background-color: var(--Midnight-blue-100);
+border-radius: 0.8rem;
+}

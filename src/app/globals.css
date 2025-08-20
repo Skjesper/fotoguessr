@@ -6,6 +6,7 @@
   --Midnight-blue-100: #002732;
   --Midnight-blue-75: rgba(0, 39, 50, 0.75);
   --Midnight-blue-50: rgba(0, 39, 50, 0.50);
+  --Sandstone:  #5E5C20;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,7 +25,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--Morning-sky);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Buvera;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
