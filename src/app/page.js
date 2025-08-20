@@ -12,8 +12,16 @@ export default function HomePage() {
           Gissa bilden, hitta platsen och tagga dig själv. Men låt inte dina
           poäng ticka bort, för ju snabbare du är, desto fler poäng får du.
         </p>
-        <Button href="/levels">Spela</Button>
-        <Button href="/leaderboard">Poängställning</Button>
+        <Button href="/levels" variant="dark">
+          Spela
+        </Button>
+        <Button
+          href="/leaderboard"
+          variant="dark"
+          icon={<Image src="/trophy.svg" alt="Trophy" width={16} height={16} />}
+        >
+          Poängställning
+        </Button>
       </section>
     </main>
   );

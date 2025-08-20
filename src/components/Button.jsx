@@ -8,14 +8,25 @@ import styles from "./Button.module.css";
 // Usage as an action button:
 // <Button onClick={handleStart}>Start Timer</Button>
 
+// Usage with icon:
+// <Button href="/leaderboard" icon={<LeaderboardIcon />}>Leaderboard</Button>
+
 export default function Button({
   children,
   href,
   onClick,
   variant = "primary",
   disabled = false,
+  icon,
   ...props
 }) {
+  const buttonContent = (
+    <>
+      {icon && <span className={styles.icon}>{icon}</span>}
+      {children}
+    </>
+  );
+
   // If href prop is passed, render a Link (styled like a button)
   if (href) {
     return (
@@ -25,7 +36,7 @@ export default function Button({
         data-variant={variant}
         {...props}
       >
-        {children}
+        {buttonContent}
       </Link>
     );
   }
@@ -39,7 +50,7 @@ export default function Button({
       data-variant={variant}
       {...props}
     >
-      {children}
+      {buttonContent}
     </button>
   );
 }
