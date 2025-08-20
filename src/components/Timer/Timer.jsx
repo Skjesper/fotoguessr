@@ -3,43 +3,50 @@ import { useState, useEffect } from "react";
 import styles from '@/components/Timer/Timer.module.css';
 
 export default function Timer({ duration, onProgress, onComplete }) {
- const [timeLeft, setTimeLeft] = useState(duration);
+  const [timeLeft, setTimeLeft] = useState(duration);
 
- useEffect(() => {
-   if (timeLeft <= 0) {
-     onComplete?.();
-     return;
-   }
+  // Separerat useEffect för att hantera när timer är klar
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onComplete?.();
+    }
+  }, [timeLeft, onComplete]);
 
-   const interval = setInterval(() => {
-     setTimeLeft((prev) => {
-       const next = prev - 1;
-       onProgress?.(1 - next / duration);
-       return next;
-     });
-   }, 1000);
+  // Timer-logik utan callbacks
+  useEffect(() => {
+    if (timeLeft <= 0) return;
 
-   return () => clearInterval(interval);
- }, [timeLeft, duration, onProgress, onComplete]);
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
 
- const minutes = Math.floor(timeLeft / 60);
- const seconds = timeLeft % 60;
+    return () => clearInterval(interval);
+  }, [timeLeft]);
 
- return (
-<div>
-  <div className={styles.timerBackground}>
-    <div className={styles.timerNumbers}>
-      <p>
-        <span>{minutes.toString().padStart(2, '0')}</span>
-        :
-        <span>{seconds.toString().padStart(2, '0')}</span>
-      </p>
-      <div className={styles.timerText}>
-        <span>MIN</span>
-        <span>SEK</span>
+  // Separerat useEffect för progress updates
+  useEffect(() => {
+    const progress = 1 - timeLeft / duration;
+    onProgress?.(progress);
+  }, [timeLeft, duration, onProgress]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  return (
+    <div>
+      <div className={styles.timerBackground}>
+        <div className={styles.timerNumbers}>
+          <p>
+            <span>{minutes.toString().padStart(2, '0')}</span>
+            :
+            <span>{seconds.toString().padStart(2, '0')}</span>
+          </p>
+          <div className={styles.timerText}>
+            <span>MIN</span>
+            <span>SEK</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
- );
+  );
 }
