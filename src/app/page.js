@@ -1,43 +1,35 @@
-'use client';
-import { useState } from 'react';
-import Timer from '../components/Timer/Timer';
-import StreetViewDisplay from '../components/StreetViewDisplay/StreetViewDisplay';
 
-export default function Page() {
- const [progress, setProgress] = useState(0);
- const [timerFinished, setTimerFinished] = useState(false);
- 
- const testLocation = {
-   lat: 57.7068,
-   lng: 11.9373
- };
+import styles from "./page.module.css";
+import Button from "@/components/Button";
+import Image from "next/image";
 
- const handleProgress = (progressValue) => {
-   setProgress(progressValue);
- };
-
- const handleComplete = () => {
-   setTimerFinished(true);
- };
-
- return (
-   <div>
-     <h1>Lindholmen Guesser</h1>
-     
-    <Timer 
-      duration={40}
-      onProgress={setProgress}  // Direkt utan wrapper
-      onComplete={() => setTimerFinished(true)}
-    />
-     
-     <StreetViewDisplay 
-       location={testLocation}
-       progress={progress}
-     />
-     
-     {timerFinished && (
-       <div>Tiden är slut!</div>
-     )}
-   </div>
- );
+export default function HomePage() {
+  return (
+    <main className={styles.container}>
+      <section className={styles.section}>
+        <div className={styles.textImageContainer}>
+          <Image src="/logo.svg" alt="App logo" width={115.094} height={122} />
+          <h1 className={styles.title}>FOTOGUESSR</h1>
+          <p className={styles.description}>
+            Gissa bilden, hitta platsen och tagga dig själv. Men låt inte dina
+            poäng ticka bort, för ju snabbare du är, desto fler poäng får du.
+          </p>
+        </div>
+        <div className={styles.buttonContainer}>
+          <Button href="/levels" variant="dark">
+            Spela
+          </Button>
+          <Button
+            href="/leaderboard"
+            variant="dark"
+            icon={
+              <Image src="/trophy.svg" alt="Trophy" width={16} height={16} />
+            }
+          >
+            Poängställning
+          </Button>
+        </div>
+      </section>
+    </main>
+  );
 }
