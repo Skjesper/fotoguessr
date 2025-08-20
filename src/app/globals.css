@@ -1,12 +1,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --Summerday: #F8F251;
-  --Morning-sky: #CBD9F4;
+  --Summerday: #f8f251;
+  --Morning-sky: #cbd9f4;
   --Midnight-blue-100: #002732;
   --Midnight-blue-75: rgba(0, 39, 50, 0.75);
-  --Midnight-blue-50: rgba(0, 39, 50, 0.50);
-  --Sandstone:  #5E5C20;
+  --Midnight-blue-50: rgba(0, 39, 50, 0.5);
+  --Sandstone: #5e5c20;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -47,7 +47,7 @@ a {
 
 @font-face {
   font-family: Buvera;
-  src: url('/fonts/Buvera-Regular.woff') format('woff');
+  src: url("/fonts/Buvera-Regular.woff") format("woff");
   font-style: normal;
   font-weight: 400;
 }
@@ -136,3 +136,58 @@ a {
  font-weight: 600;
 }
 
+@font-face {
+  font-family: "Kritik-Trial Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Regular"),
+    url("/fonts/Kritik-Trial-Regular-BF64d4435ca881b.woff") format("woff");
+}
+/* 
+@font-face {
+  font-family: "Kritik-Trial Light";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Light"),
+    url("Kritik-Trial-Light-BF64d4435c98236.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial Medium";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Medium"),
+    url("Kritik-Trial-Medium-BF64d4435c98e89.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial SemiBold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial SemiBold"),
+    url("Kritik-Trial-SemiBold-BF64d4435c9fd0d.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Bold"),
+    url("Kritik-Trial-Bold-BF64d4435c327b1.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial ExtraBold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial ExtraBold"),
+    url("Kritik-Trial-ExtraBold-BF64d4435cad2c0.woff") format("woff");
+} */
+
+@font-face {
+  font-family: "Kritik-Trial";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Black"),
+    url("/fonts/Kritik-Trial-Black-BF64d4435ca3552.woff") format("woff");
+}

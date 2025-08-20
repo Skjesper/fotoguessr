@@ -33,9 +33,9 @@
 }
 
 .description {
-  color: #000;
+  color: var(--Midnight-blue-100, #002732);
   text-align: center;
-  font-family: Inter;
+  font-family: Buvera;
   font-size: 1.125rem;
   font-style: normal;
   font-weight: 500;
