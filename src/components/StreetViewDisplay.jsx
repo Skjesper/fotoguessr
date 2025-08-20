@@ -16,7 +16,7 @@ const getCurrentFOV = (progressValue) => {
  
  if (!location) return null;
 
- const streetViewURL = `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${location.lat},${location.lng}&heading=0&pitch=0&fov=${currentFOV}&key=${API_KEY}`;
+ const streetViewURL = `https://maps.googleapis.com/maps/api/streetview?size=400x600&location=${location.lat},${location.lng}&heading=0&pitch=0&fov=${currentFOV}&key=${API_KEY}`;
 
  return (
    <div>
