@@ -26,14 +26,20 @@ export default function Timer({ duration, onProgress, onComplete }) {
  const seconds = timeLeft % 60;
 
  return (
-   <div>
-    <div className= {styles.timerBackground}>
-      <div className= {styles.timerText}>
-     <p>{minutes}:{seconds.toString().padStart(2, '0')}</p>
-     
-     <p>MIN</p><p>SEK</p>
-     </div>
-     </div>
-   </div>
+<div>
+  <div className={styles.timerBackground}>
+    <div className={styles.timerNumbers}>
+      <p>
+        <span>{minutes.toString().padStart(2, '0')}</span>
+        :
+        <span>{seconds.toString().padStart(2, '0')}</span>
+      </p>
+      <div className={styles.timerText}>
+        <span>MIN</span>
+        <span>SEK</span>
+      </div>
+    </div>
+  </div>
+</div>
  );
 }

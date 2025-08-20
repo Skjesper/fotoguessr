@@ -23,7 +23,7 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--Morning-sky);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -44,4 +44,11 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url('/fonts/Buvera-Regular.woff') format('woff');
+  font-style: normal;
+  font-weight: 400;
 }
