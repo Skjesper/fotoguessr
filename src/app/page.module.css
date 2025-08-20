@@ -15,6 +15,14 @@
   gap: 2.8125rem;
 }
 
+.textImageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.875rem;
+  align-self: stretch;
+}
+
 .title {
   color: var(--Sandstone, #5e5c20);
   font-family: Kritik-Trial;
@@ -32,4 +40,12 @@
   font-style: normal;
   font-weight: 500;
   line-height: 1.5rem; /* 133.333% */
+}
+
+.buttonContainer {
+  display: flex;
+  width: 13rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.875rem;
 }
