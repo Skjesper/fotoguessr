@@ -4,6 +4,7 @@ import Timer from '@/components/Timer/Timer';
 import StreetViewDisplay from '@/components/StreetViewDisplay/StreetViewDisplay';
 import Button from '@/components/Button';
 import styles from '@/app/gamePage/page.module.css';
+import UnlockTime from '@/components/UnlockTime/UnlockTime';
 
 
 export default function Page() {
@@ -28,25 +29,21 @@ export default function Page() {
       <h1>Lindholmen Guesser</h1>
      <section className={styles.gameSection}>
         <div className={styles.gameUi}>
-          <Button 
-        variant="primary"
-        onClick={() => console.log('Button clicked')}
-      >
-       Level
-      </Button>
+           <UnlockTime>
+            11:00
+            </UnlockTime>
       <Timer 
         duration={40}
         onProgress={setProgress}
         onComplete={handleComplete}
       />
+        
 
-        <Button 
-        variant="primary"
-        onClick={() => console.log('Button clicked')}
-      >
-       Stängs
-      </Button>
-      </div>
+        <UnlockTime>
+            11:00
+            </UnlockTime>
+            </div>
+      
      <div className={styles.streetViewSection}>
         <div className={styles.imgDisplay}>
         <StreetViewDisplay 
