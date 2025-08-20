@@ -1,1 +1,39 @@
-/* Add button styles here */
+/* Base button styles */
+.button {
+  display: inline-flex;
+  padding: 0.9375rem 1.5625rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 1.875rem;
+  border: 2px solid;
+  font-family: Inter;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Dark variant (default) */
+.button[data-variant="dark"],
+.button[data-variant="primary"] {
+  border-color: var(--Midnight-blue-100, #002732);
+  background: var(--Midnight-blue-100, #002732);
+  color: var(--Morning-sky, #cbd9f4);
+}
+
+/* Light variant */
+.button[data-variant="light"] {
+  border-color: var(--Morning-sky, #cbd9f4);
+  background: var(--Morning-sky, #cbd9f4);
+  color: var(--Midnight-blue-100, #002732);
+}
+
+/* Icon styling */
+.icon {
+  display: inline-flex;
+  align-items: center;
+}
