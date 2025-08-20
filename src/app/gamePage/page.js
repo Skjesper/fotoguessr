@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Timer from '@/components/Timer';
 import StreetViewDisplay from '@/components/StreetViewDisplay';
 import Button from '@/components/Button';
+import styles from '@/app/gamePage/page.module.css';
+
 
 export default function Page() {
   const [progress, setProgress] = useState(0);
@@ -30,17 +32,20 @@ export default function Page() {
         onProgress={setProgress}
         onComplete={handleComplete}
       />
-     
-      <StreetViewDisplay 
-        location={testLocation}
-        progress={progress}
-      />
+     <section className={styles.streetViewSection}>
+        <div className={styles.imgDisplay}>
+        <StreetViewDisplay 
+          location={testLocation}
+          progress={progress}
+        />
+        </div>
+      </section>
 
       <Button 
         variant="primary"
         onClick={() => console.log('Button clicked')}
       >
-        Submit Guess
+       Tagga plats
       </Button>
     </div>
   );

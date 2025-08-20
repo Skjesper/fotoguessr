@@ -1,0 +1,11 @@
+.streetViewSection {
+    width: 100%;
+    padding: 1rem; /* eller vilken padding du vill ha */
+    box-sizing: border-box;
+}
+
+.imgDisplay {
+    width: 100%;
+    height: auto;
+    overflow: hidden; /* förhindrar overflow */
+}
