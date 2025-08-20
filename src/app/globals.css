@@ -53,6 +53,90 @@ a {
 }
 
 @font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-Black.woff') format('woff');
+ font-style: normal;
+ font-weight: 900;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-BlackItalic.woff') format('woff');
+ font-style: italic;
+ font-weight: 900;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-Bold.woff') format('woff');
+ font-style: normal;
+ font-weight: 700;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-BoldItalic.woff') format('woff');
+ font-style: italic;
+ font-weight: 700;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-ExtraBold.woff') format('woff');
+ font-style: normal;
+ font-weight: 800;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-ExtraBoldItalic.woff') format('woff');
+ font-style: italic;
+ font-weight: 800;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-Medium.woff') format('woff');
+ font-style: normal;
+ font-weight: 500;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-MediumItalic.woff') format('woff');
+ font-style: italic;
+ font-weight: 500;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-Regular.woff') format('woff');
+ font-style: normal;
+ font-weight: 400;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-RegularItalic.woff') format('woff');
+ font-style: italic;
+ font-weight: 400;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-SemiBold.woff') format('woff');
+ font-style: normal;
+ font-weight: 600;
+}
+
+@font-face {
+ font-family: Buvera;
+ src: url('/fonts/Buvera-SemiBoldItalic.woff') format('woff');
+ font-style: italic;
+ font-weight: 600;
+}
+
+@font-face {
   font-family: "Kritik-Trial Regular";
   font-style: normal;
   font-weight: normal;

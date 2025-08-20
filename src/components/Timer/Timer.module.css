@@ -1,27 +1,32 @@
 .timerBackground {
 
-    background-color: var(--Summerday);
-    display: flex;
-    padding: 0.625rem 1.25rem 1.125rem 1.25rem;
-    justify-content: center;
-    align-items: center;
-    gap: 0.625rem;
-    border-radius: 20px;
+  display: flex;
+padding: 0.625rem 1.25rem 1.125rem 1.25rem;
+justify-content: center;
+align-items: center;
+gap: 0.625rem;
+border-radius: 1.5625rem;
+background: var(--Summerday, #F8F251);
+width: fit-content;
     
 }
 
 .timerNumbers {
 
-    font-family: Buvera;
-    color: black;
-    font-size: 2.625rem;
+   color: var(--Sandstone, #5E5C20);
+font-family: Buvera;
+font-size: 2.625rem;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+letter-spacing: 0.2625rem;
 }
 
 .timerText {
     display: flex;
     justify-content: space-between;
     font-family: Buvera;
-    color: black;
+    color: var(--Sandstone);
     font-size: 1rem
 
 }
