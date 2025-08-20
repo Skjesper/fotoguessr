@@ -20,8 +20,7 @@ const getCurrentFOV = (progressValue) => {
 
  return (
    <div>
-     <img src={streetViewURL} alt="Street View" />
-     <p>FOV: {currentFOV}°</p>
+     <img  src={streetViewURL} alt="Street View" />
    </div>
  );
 };
