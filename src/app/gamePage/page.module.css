@@ -1,7 +1,15 @@
+
+
 .gameSection {
     width: 100%;
     padding: 1rem; /* eller vilken padding du vill ha */
     box-sizing: border-box;
+    max-width: 26rem;
+    display: flex;
+    margin: 0 auto;
+    flex-direction: column;
+    
+
 }
 
 .gameUi {

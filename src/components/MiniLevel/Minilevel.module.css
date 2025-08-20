@@ -1,0 +1,41 @@
+.minilevelSection {
+
+display: flex;
+width: 3.4375rem;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+
+}
+
+.miniLevel {
+
+border-radius: 1.71875rem;
+background: var(--Midnight-blue-100, #002732);
+color: var(--Summerday, #F8F251);
+font-family: Kritik-Trial;
+font-size: 2.128rem;
+font-style: normal;
+font-weight: 900;
+line-height: normal;
+display: flex;
+height: 3.4375rem;
+padding: 0.35469rem 1.00944rem;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 0.27281rem;
+align-self: stretch;
+}
+
+.text {
+
+    color: var(--Sandstone, #5E5C20);
+text-align: center;
+font-family: Buvera;
+font-size: 1rem;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+}
+

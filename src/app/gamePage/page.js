@@ -5,6 +5,7 @@ import StreetViewDisplay from '@/components/StreetViewDisplay/StreetViewDisplay'
 import Button from '@/components/Button';
 import styles from '@/app/gamePage/page.module.css';
 import UnlockTime from '@/components/UnlockTime/UnlockTime';
+import Minilevel from '@/components/MiniLevel/MiniLevel';
 
 
 export default function Page() {
@@ -29,11 +30,9 @@ export default function Page() {
       <h1>Lindholmen Guesser</h1>
      <section className={styles.gameSection}>
         <div className={styles.gameUi}>
-           <UnlockTime>
-            11:00
-            </UnlockTime>
+         <Minilevel level={1} />
       <Timer 
-        duration={40}
+        duration={80}
         onProgress={setProgress}
         onComplete={handleComplete}
       />
