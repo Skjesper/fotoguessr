@@ -33,7 +33,7 @@ export default function Page() {
         <div className={styles.gameUi}>
          <Minilevel level={1} />
       <Timer 
-        duration={80}
+        duration={1000}
         onProgress={setProgress}
         onComplete={handleComplete}
       />
