@@ -181,7 +181,7 @@ function GamePageContent() {
 
   return (
     <div>
-      <FotoguesserHeader />
+      <FotoguesserHeader onArrowClick={() => router.push('/levels')} />
       <section className={styles.gameSection}>
         <div className={styles.gameUi}>
           <Minilevel level={currentLevel} />
