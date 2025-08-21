@@ -46,7 +46,7 @@ function GameCompleteContent() {
   
   return (
     <main className={styles.main}>
-      <FotoguesserHeader />
+      
       <section className={styles.infoContainer}>
         <Stars count={starsEarned} />
         
@@ -71,16 +71,14 @@ function GameCompleteContent() {
         
         {/* Visa karta med målplatsen */}
         {targetLat && targetLng && (
-          <div style={{ margin: '20px 0', textAlign: 'center' }}>
-            <h3>Här var målplatsen:</h3>
+          <div className={styles.mapContainer}>
+            <h3 className={styles.mapTitle}>
+              Här var målplatsen:
+            </h3>
             <img
               src={`https://maps.googleapis.com/maps/api/staticmap?center=${targetLat},${targetLng}&zoom=16&size=300x200&markers=color:red%7C${targetLat},${targetLng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
               alt="Målplats på karta"
-              style={{ 
-                borderRadius: '8px', 
-                border: '2px solid #ddd',
-                maxWidth: '100%'
-              }}
+              className={styles.mapImage}
             />
           </div>
         )}
