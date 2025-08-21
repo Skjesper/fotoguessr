@@ -37,19 +37,6 @@ export default function LevelsPage() {
 
           <Levels
             number={2}
-            timeSlot="08:00-11:00"
-            isUnlocked={isTimeSlotUnlocked("08:00-11:00")}
-            hasPlayed={hasPlayedToday("08:00-11:00")}
-            onClick={() => startGame(2)}
-          />
-          <Image
-            src="/timemarker.svg"
-            alt="timeline marker"
-            height={44}
-            width={7}
-          />
-          <Levels
-            number={2}
             timeSlot="11:00-13:00"
             isUnlocked={isTimeSlotUnlocked("11:00-13:00")}
             hasPlayed={hasPlayedToday("11:00-13:00")}
