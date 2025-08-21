@@ -8,19 +8,55 @@
   flex-shrink: 0;
 }
 
+/* Reset default button appearance and remove "depth"*/
 .levelCircle {
+  /* reset native button styles */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  background: var(--Midnight-blue-100, #002732);
+  box-shadow: none;
+  outline: none;
+  padding: 0.8125rem 2.3125rem 1.25rem 2.3125rem;
+
   display: flex;
   height: 7.875rem;
-  padding: 0.8125rem 2.3125rem 1.25rem 2.3125rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 0.625rem;
   align-self: stretch;
   border-radius: 3.9375rem;
-  background: var(--Midnight-blue-100, #002732);
+
+  /* touch / interaction */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
 }
 
+/* Hover / focus behavior: show pointer and a subtle lift (mobile ignores hover) */
+.levelCircle:hover,
+.levelCircle:focus {
+  cursor: pointer; /* hand on hover */
+  transform: translateY(2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.06);
+}
+
+.levelCircle:disabled,
+.levelCircle[aria-disabled="true"] {
+  /* opacity: 0.6; */
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* keyboard focus visible for accessibility */
+.levelCircle:focus-visible {
+  box-shadow: 0 0 0 4px rgba(248, 242, 81, 0.18);
+}
+
+/* content inside the button */
 .levelContent {
   display: flex;
   width: 3.1875rem;
@@ -29,6 +65,7 @@
   gap: 0.5rem;
 }
 
+/* unlocked/locked modifiers (targeting ancestor class) */
 .unlocked .levelNumber {
   color: var(--Summerday, #f8f251);
 }

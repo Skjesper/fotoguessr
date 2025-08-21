@@ -16,11 +16,17 @@ const Levels = ({
 
   return (
     <div className={styles.levelContainer}>
-      <div
+      <button
+        type="button"
         className={`${styles.levelCircle} ${
           isUnlocked ? styles.unlocked : styles.locked
         } ${hasPlayed ? styles.completed : ""}`}
         onClick={handleClick}
+        disabled={!isUnlocked || hasPlayed}
+        aria-disabled={!isUnlocked || hasPlayed}
+        aria-label={`Level ${number} ${timeSlot} ${
+          hasPlayed ? "spelad" : isUnlocked ? "upplåst" : "låst"
+        }`}
       >
         <div className={styles.levelContent}>
           <h2 className={styles.levelNumber}>{number}</h2>
@@ -30,7 +36,7 @@ const Levels = ({
             </div>
           )}
         </div>
-      </div>
+      </button>
       <div className={styles.timeSlot}>{timeSlot}</div>
       {number < 3 && <div className={styles.connector}></div>}
     </div>
