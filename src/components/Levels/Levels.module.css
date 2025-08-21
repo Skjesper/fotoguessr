@@ -1,0 +1,56 @@
+.levelContainer {
+  display: flex;
+  width: 7.875rem;
+  height: 9.8125rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.levelCircle {
+  display: flex;
+  height: 7.875rem;
+  padding: 0.8125rem 2.3125rem 1.25rem 2.3125rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  align-self: stretch;
+  border-radius: 3.9375rem;
+  background: var(--Midnight-blue-100, #002732);
+}
+
+.levelContent {
+  display: flex;
+  width: 3.1875rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.unlocked .levelNumber {
+  color: var(--Summerday, #f8f251);
+}
+
+.locked .levelNumber {
+  color: var(--Morning-sky, #cbd9f4);
+}
+
+.levelNumber {
+  font-family: Kritik-Trial;
+  font-size: 4.875rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+}
+
+.timeSlot {
+  color: var(--Midnight-blue-100, #002732);
+  text-align: center;
+  font-family: Buvera;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
