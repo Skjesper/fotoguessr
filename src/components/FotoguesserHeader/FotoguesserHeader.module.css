@@ -11,7 +11,7 @@
 
 .arrowIcon {
     position: absolute;
-    left: 50; /* Placerar till vänster */
+    left: 2.5rem; /* Placerar till vänster */
     width: 2.18363rem;
     height: 2.18363rem;
     flex-shrink: 0;
