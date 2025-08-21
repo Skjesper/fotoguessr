@@ -27,7 +27,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className={styles.container}>
+    <main className={styles.maincontainer}>
       <FotoguesserHeader onArrowClick={() => router.back()} />
 
       <div className={styles.content}>
@@ -43,7 +43,6 @@ export default function OnboardingPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={styles.nameInput}
-            placeholder="Skriv ditt namn här"
           />
         </div>
 
@@ -61,6 +60,6 @@ export default function OnboardingPage() {
           </Button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
