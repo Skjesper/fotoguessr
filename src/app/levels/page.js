@@ -13,7 +13,7 @@ export default function LevelsPage() {
 
   const startGame = (levelNumber) => {
     // Navigate to game page or handle game start logic
-    router.push(`/game?level=${levelNumber}`);
+    router.push(`/gamePage?level=${levelNumber}`);
   };
 
   return (
@@ -27,6 +27,20 @@ export default function LevelsPage() {
             isUnlocked={isTimeSlotUnlocked("08:00-11:00")}
             hasPlayed={hasPlayedToday("08:00-11:00")}
             onClick={() => startGame(1)}
+          />
+          <Image
+            src="/timemarker.svg"
+            alt="timeline marker"
+            height={44}
+            width={7}
+          />
+
+          <Levels
+            number={2}
+            timeSlot="08:00-11:00"
+            isUnlocked={isTimeSlotUnlocked("08:00-11:00")}
+            hasPlayed={hasPlayedToday("08:00-11:00")}
+            onClick={() => startGame(2)}
           />
           <Image
             src="/timemarker.svg"
