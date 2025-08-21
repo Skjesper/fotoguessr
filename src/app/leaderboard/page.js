@@ -14,7 +14,11 @@ export default function LeaderboardPage() {
   useEffect(() => {
     fetch("/api/leaderboard")
       .then((res) => res.json())
-      .then(setLeaders);
+      .then((data) => {
+        // Sort list by score
+        const sorted = data.sort((a, b) => b.score - a.score);
+        setLeaders(sorted);
+      });
   }, []);
 
   const submitScore = async (e) => {
@@ -26,36 +30,22 @@ export default function LeaderboardPage() {
     });
     // Update the leaderboard
     const res = await fetch("/api/leaderboard");
-    setLeaders(await res.json());
+    const data = await res.json();
+    const sorted = data.sort((a, b) => b.score - a.score);
+    setLeaders(sorted);
   };
 
   return (
     <div className={styles.container}>
       <FotoguesserHeader onArrowClick={() => router.back()} />
-      {/* <form onSubmit={submitScore}>
-        <input
-          type="text"
-          placeholder="Namn"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Poäng"
-          value={score}
-          onChange={(e) => setScore(e.target.value)}
-          required
-        />
-        <button type="submit">Skicka</button>
-      </form> */}
       <div className={styles.leaderboard}>
         <ul className={styles.list}>
-          {leaders.map((entry) => (
+          {leaders.map((entry, index) => (
             <li key={entry.id}>
               <div className={styles.item}>
+                <span className={styles.rank}>{index + 1}</span>
                 <span className={styles.itemName}>{entry.name}</span>
-                <span className={styles.itemScore}> – {entry.score}</span>
+                <span className={styles.itemScore}>{entry.score}</span>
               </div>
             </li>
           ))}
