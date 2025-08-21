@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Timer from '@/components/Timer/Timer';
 import StreetViewDisplay from '@/components/StreetViewDisplay/StreetViewDisplay';
@@ -9,7 +9,7 @@ import UnlockTime from '@/components/UnlockTime/UnlockTime';
 import Minilevel from '@/components/MiniLevel/MiniLevel';
 import FotoguesserHeader from '@/components/FotoguesserHeader/FotoguesserHeader';
 
-export default function Page() {
+function GamePageContent() {
   const searchParams = useSearchParams();
   const [progress, setProgress] = useState(0);
   const [timerFinished, setTimerFinished] = useState(false);
@@ -197,5 +197,13 @@ export default function Page() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Laddar...</div>}>
+      <GamePageContent />
+    </Suspense>
   );
 }
