@@ -13,7 +13,7 @@ export default function LevelsPage() {
 
   const startGame = (levelNumber) => {
     // Navigate to game page or handle game start logic
-    router.push(`/game?level=${levelNumber}`);
+    router.push(`/gamePage?level=${levelNumber}`);
   };
 
   return (
@@ -35,6 +35,7 @@ export default function LevelsPage() {
             height={44}
             width={7}
           />
+
           <Levels
             number={2}
             timeSlot="11:00-13:00"
