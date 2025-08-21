@@ -202,7 +202,7 @@ function GamePageContent() {
                 progress={progress}
               />
             ) : (
-              <div>Om du ser det här meddelandet, kolla så att du har godkänt att dela din plats</div>
+              <div className={styles.infoMessage}>Om du ser det här meddelandet. Se till så att du har godkänt att dela din plats.</div>
             )}
           </div>
         </div>
