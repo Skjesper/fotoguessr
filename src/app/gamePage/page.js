@@ -29,8 +29,8 @@ function GamePageContent() {
 
   // Generera slumpmässig koordinat mellan 150-300m från användarens position
   const generateRandomLocation = (centerLat, centerLng) => {
-    const minDistance = 150;
-    const maxDistance = 300;
+    const minDistance = 50;
+    const maxDistance = 100;
     const distance = minDistance + Math.random() * (maxDistance - minDistance);
     
     const radiusInDegrees = distance / 111320;
