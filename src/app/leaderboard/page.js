@@ -45,7 +45,14 @@ export default function LeaderboardPage() {
               <div className={styles.item}>
                 <span className={styles.rank}>{index + 1}</span>
                 <span className={styles.itemName}>{entry.name}</span>
-                <span className={styles.itemScore}>{entry.score}</span>
+                <div className={styles.itemScore}>
+                  <img
+                    src="/tinystar.svg"
+                    alt="star"
+                    className={styles.starIcon}
+                  />
+                  {entry.score}
+                </div>
               </div>
             </li>
           ))}

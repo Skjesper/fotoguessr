@@ -29,10 +29,51 @@
 .item {
   width: 18.175rem;
   display: flex;
+  justify-content: space-between;
   padding: 0.9375rem 1.3125rem;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.625rem;
   border-radius: 0.625rem;
   background: var(--Morning-sky, #cbd9f4);
+}
+
+.rank {
+  display: inline-block;
+  width: 2.34375rem;
+  height: 2.25rem;
+  border-radius: 50%; /* gör det runt */
+  background-color: var(--Midnight-blue-100, #002732);
+  color: var(--Morning-sky, #cbd9f4);
+  text-align: center;
+  font-family: Kritik-Trial Regular;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemName {
+  color: var(--Midnight-blue-100, #002732);
+  text-align: center;
+  font-family: Kritik-Trial Regular;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.itemScore {
+  color: var(--Midnight-blue-100, #002732);
+  text-align: center;
+  font-family: Kritik-Trial Regular;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
