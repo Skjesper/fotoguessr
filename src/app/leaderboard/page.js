@@ -1,10 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./leaderboard.module.css";
+import FotoguesserHeader from "@/components/FotoguesserHeader/FotoguesserHeader";
 
 export default function LeaderboardPage() {
   const [name, setName] = useState("");
   const [score, setScore] = useState("");
   const [leaders, setLeaders] = useState([]);
+  const router = useRouter();
 
   // Get the leaderboard
   useEffect(() => {
@@ -26,9 +30,9 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div>
-      <h1>Leaderboard</h1>
-      <form onSubmit={submitScore}>
+    <div className={styles.container}>
+      <FotoguesserHeader onArrowClick={() => router.back()} />
+      {/* <form onSubmit={submitScore}>
         <input
           type="text"
           placeholder="Namn"
@@ -44,15 +48,19 @@ export default function LeaderboardPage() {
           required
         />
         <button type="submit">Skicka</button>
-      </form>
-
-      <ul>
-        {leaders.map((entry) => (
-          <li key={entry.id}>
-            {entry.name} – {entry.score}
-          </li>
-        ))}
-      </ul>
+      </form> */}
+      <div className={styles.leaderboard}>
+        <ul className={styles.list}>
+          {leaders.map((entry) => (
+            <li key={entry.id}>
+              <div className={styles.item}>
+                <span className={styles.itemName}>{entry.name}</span>
+                <span className={styles.itemScore}> – {entry.score}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
