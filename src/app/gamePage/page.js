@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Timer from '@/components/Timer/Timer';
 import StreetViewDisplay from '@/components/StreetViewDisplay/StreetViewDisplay';
 import Button from '@/components/Button';
@@ -11,11 +11,13 @@ import FotoguesserHeader from '@/components/FotoguesserHeader/FotoguesserHeader'
 
 function GamePageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [progress, setProgress] = useState(0);
   const [timerFinished, setTimerFinished] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [gameLocation, setGameLocation] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [timeRemaining, setTimeRemaining] = useState(0);
   
   // Läs level från URL parametrar
   useEffect(() => {
@@ -59,11 +61,7 @@ function GamePageContent() {
         },
         (error) => {
           console.error('GPS fel:', error);
-          // Fallback till Göteborg om GPS misslyckades
-          const fallbackUser = { lat: 57.7068, lng: 11.9373 };
-          setUserLocation(fallbackUser);
-          const fallbackLocation = generateRandomLocation(fallbackUser.lat, fallbackUser.lng);
-          setGameLocation(fallbackLocation);
+          // Ingen fallback - låt gameLocation vara null
         },
         {
           enableHighAccuracy: true,
@@ -72,11 +70,8 @@ function GamePageContent() {
         }
       );
     } else {
-      // Fallback till Göteborg om ingen GPS
-      const fallbackUser = { lat: 57.7068, lng: 11.9373 };
-      setUserLocation(fallbackUser);
-      const fallbackLocation = generateRandomLocation(fallbackUser.lat, fallbackUser.lng);
-      setGameLocation(fallbackLocation);
+      // Ingen fallback - låt gameLocation vara null
+      console.log('GPS inte tillgängligt');
     }
   }, []);
 
@@ -85,17 +80,17 @@ function GamePageContent() {
     1: {
       timeSlot: "08:00-11:00",
       unlockTime: "11:00",
-      duration: 1000
+      duration: 1800
     },
     2: {
       timeSlot: "11:00-13:00", 
       unlockTime: "13:00",
-      duration: 1200
+      duration: 1800
     },
     3: {
       timeSlot: "13:00-17:00",
       unlockTime: "17:00", 
-      duration: 1500
+      duration: 1800
     }
   };
 
@@ -109,7 +104,7 @@ function GamePageContent() {
     return Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
   };
 
-  // Kontrollera om användaren är inom 25 meter från målet
+  // Kontrollera om användaren är inom 25 meter från målet och navigera till gameComplete
   const checkIfNearTarget = () => {
     if (!userLocation || !gameLocation) {
       console.log('Saknar position data');
@@ -128,16 +123,39 @@ function GamePageContent() {
           gameLocation.lng
         );
 
-        console.log(`Avstånd till mål: ${distance.toFixed(1)} meter`);
+        const success = distance <= 25;
         
-        if (distance <= 25) {
-          console.log('OK - Du är inom 25 meter från målet!');
-        } else {
-          console.log(`För långt bort - du behöver komma ${(distance - 25).toFixed(1)} meter närmre`);
-        }
+        console.log(`Avstånd till mål: ${distance.toFixed(1)} meter`);
+        console.log(success ? 'OK - Du är inom 25 meter från målet!' : `För långt bort - du behöver komma ${(distance - 25).toFixed(1)} meter närmre`);
+        
+        // Navigera till gameComplete med resultat OCH koordinater
+        const params = new URLSearchParams({
+          level: currentLevel.toString(),
+          success: success.toString(),
+          distance: distance.toFixed(1),
+          target: success ? 'reached' : 'missed',
+          timeRemaining: timeRemaining.toFixed(0),
+          targetLat: gameLocation.lat.toString(),
+          targetLng: gameLocation.lng.toString()
+        });
+        
+        router.push(`/gameComplete?${params.toString()}`);
       },
       (error) => {
         console.error('Kunde inte hämta nuvarande position:', error);
+        // Navigera till gameComplete med fel
+        const params = new URLSearchParams({
+          level: currentLevel.toString(),
+          success: 'false',
+          distance: 'unknown',
+          target: 'error',
+          error: 'GPS fel',
+          timeRemaining: timeRemaining.toFixed(0),
+          targetLat: gameLocation.lat.toString(),
+          targetLng: gameLocation.lng.toString()
+        });
+        
+        router.push(`/gameComplete?${params.toString()}`);
       },
       {
         enableHighAccuracy: true,
@@ -149,6 +167,11 @@ function GamePageContent() {
 
   const handleProgress = (progressValue) => {
     setProgress(progressValue);
+    // Beräkna tid kvar baserat på progress och total duration
+    const totalTime = currentLevelData.duration;
+    const elapsed = (progressValue / 100) * totalTime;
+    const remaining = totalTime - elapsed;
+    setTimeRemaining(Math.max(0, remaining));
   };
 
   const handleComplete = () => {
@@ -163,7 +186,7 @@ function GamePageContent() {
           <Minilevel level={currentLevel} />
           <Timer 
             duration={currentLevelData.duration}
-            onProgress={setProgress}
+            onProgress={handleProgress}
             onComplete={handleComplete}
           />
           <UnlockTime>
@@ -179,7 +202,7 @@ function GamePageContent() {
                 progress={progress}
               />
             ) : (
-              <div>Laddar...</div>
+              <div>Om du ser det här meddelandet, kolla så att du har godkänt att dela din plats</div>
             )}
           </div>
         </div>
