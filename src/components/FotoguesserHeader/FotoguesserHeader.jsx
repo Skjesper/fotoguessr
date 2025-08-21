@@ -19,7 +19,7 @@ const FotoguesserHeader = ({ onArrowClick }) => {
           fill="#5E5C20"
         />
       </svg>
-      <h1 className={styles.headerH1}>FOTOGUESSER</h1>
+      <h1 className={styles.headerH1}>FOTOGUESSR</h1>
     </header>
   );
 };
