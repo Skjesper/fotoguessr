@@ -125,7 +125,7 @@ function GamePageContent() {
 
         const success = distance <= 25;
         
-        console.log(`Avstånd till mål: ${distance.toFixed(1)} meter`);
+        console.log(`Avstånd till mål: ${distance.toFixed(1)} meter (noggrannhet: ${position.coords.accuracy.toFixed(1)}m)`);
         console.log(success ? 'OK - Du är inom 25 meter från målet!' : `För långt bort - du behöver komma ${(distance - 25).toFixed(1)} meter närmre`);
         
         // Navigera till gameComplete med resultat OCH koordinater
@@ -136,7 +136,8 @@ function GamePageContent() {
           target: success ? 'reached' : 'missed',
           timeRemaining: timeRemaining.toFixed(0),
           targetLat: gameLocation.lat.toString(),
-          targetLng: gameLocation.lng.toString()
+          targetLng: gameLocation.lng.toString(),
+          accuracy: position.coords.accuracy.toFixed(1)
         });
         
         router.push(`/gameComplete?${params.toString()}`);
@@ -159,8 +160,8 @@ function GamePageContent() {
       },
       {
         enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 30000
+        timeout: 10000,
+        maximumAge: 0
       }
     );
   };
