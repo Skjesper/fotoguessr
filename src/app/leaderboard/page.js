@@ -1,16 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./leaderboard.module.css";
+import FotoguesserHeader from "@/components/FotoguesserHeader/FotoguesserHeader";
 
 export default function LeaderboardPage() {
   const [name, setName] = useState("");
   const [score, setScore] = useState("");
   const [leaders, setLeaders] = useState([]);
+  const router = useRouter();
 
   // Get the leaderboard
   useEffect(() => {
     fetch("/api/leaderboard")
       .then((res) => res.json())
-      .then(setLeaders);
+      .then((data) => {
+        // Sort list by score
+        const sorted = data.sort((a, b) => b.score - a.score);
+        setLeaders(sorted);
+      });
   }, []);
 
   const submitScore = async (e) => {
@@ -22,37 +30,34 @@ export default function LeaderboardPage() {
     });
     // Update the leaderboard
     const res = await fetch("/api/leaderboard");
-    setLeaders(await res.json());
+    const data = await res.json();
+    const sorted = data.sort((a, b) => b.score - a.score);
+    setLeaders(sorted);
   };
 
   return (
-    <div>
-      <h1>Leaderboard</h1>
-      <form onSubmit={submitScore}>
-        <input
-          type="text"
-          placeholder="Namn"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Poäng"
-          value={score}
-          onChange={(e) => setScore(e.target.value)}
-          required
-        />
-        <button type="submit">Skicka</button>
-      </form>
-
-      <ul>
-        {leaders.map((entry) => (
-          <li key={entry.id}>
-            {entry.name} – {entry.score}
-          </li>
-        ))}
-      </ul>
+    <div className={styles.container}>
+      <FotoguesserHeader onArrowClick={() => router.back()} />
+      <div className={styles.leaderboard}>
+        <ul className={styles.list}>
+          {leaders.map((entry, index) => (
+            <li key={entry.id}>
+              <div className={styles.item}>
+                <span className={styles.rank}>{index + 1}</span>
+                <span className={styles.itemName}>{entry.name}</span>
+                <div className={styles.itemScore}>
+                  <img
+                    src="/tinystar.svg"
+                    alt="star"
+                    className={styles.starIcon}
+                  />
+                  {entry.score}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
