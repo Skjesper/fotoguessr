@@ -1,0 +1,39 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  gap: 5rem;
+  align-items: center;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  width: 21.25rem;
+  padding: 2.1875rem 2.5rem;
+  align-items: center;
+  /* gap: 0.625rem; */
+  gap: 1.75rem;
+  border-radius: 1.25rem;
+  background: var(--Midnight-blue-100, #002732);
+}
+
+.title {
+  color: var(--Summerday, #f8f251);
+  text-align: center;
+  font-family: Kritik-Trial Semibold;
+  font-size: 2.375rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.description {
+  color: var(--Morning-sky, #cbd9f4);
+  text-align: center;
+  font-family: Buvera;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
