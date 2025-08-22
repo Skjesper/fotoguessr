@@ -4,6 +4,24 @@
   min-height: 100vh;
 }
 
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  margin-top: 2rem;
+}
+
+.welcomeText {
+  color: var(--Midnight-blue-75, rgba(0, 39, 50, 0.75));
+  text-align: center;
+  font-family: Buvera;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -18,13 +36,12 @@
   width: 7.875rem;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
 }
 
 .title {
   color: var(--Sandstone, #5e5c20);
   font-family: Kritik-Trial Semibold;
-  font-size: 2.125rem;
+  font-size: 1.75rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;

@@ -1,4 +1,6 @@
 "use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import Image from "next/image";
 import FotoguesserHeader from "@/components/FotoguesserHeader/FotoguesserHeader";
@@ -6,21 +8,39 @@ import Levels, {
   isTimeSlotUnlocked,
   hasPlayedToday,
 } from "@/components/Levels/Levels";
-import { useRouter } from "next/navigation";
 
 export default function LevelsPage() {
   const router = useRouter();
+  const [playerName, setPlayerName] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Vänta tills vi är på klientsidan
+    setIsClient(true);
+    const savedPlayerName = localStorage.getItem("playerName");
+    setPlayerName(savedPlayerName);
+  }, []);
 
   const startGame = (levelNumber) => {
     // Navigate to game page or handle game start logic
     router.push(`/gamePage?level=${levelNumber}`);
   };
 
+  // Visa loading medan vi väntar på client-side rendering
+  if (!isClient) {
+    return <div>Laddar...</div>;
+  }
+
   return (
     <main className={styles.mainContainer}>
-      <FotoguesserHeader onArrowClick={() => router.push('/')} />
+      <FotoguesserHeader onArrowClick={() => router.push("/")} />
       <div className={styles.content}>
-        <h1 className={styles.title}>Utmaningar</h1>
+        <div className={styles.header}>
+          {playerName && (
+            <p className={styles.welcomeText}>Spelar som: {playerName}</p>
+          )}
+          <h1 className={styles.title}>Utmaningar</h1>
+        </div>
         <section className={styles.levelsContainer}>
           <Levels
             number={1}

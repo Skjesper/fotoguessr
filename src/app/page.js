@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import Button from "@/components/Button";
@@ -7,11 +7,18 @@ import Image from "next/image";
 
 export default function HomePage() {
   const router = useRouter();
+  const [playerName, setPlayerName] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Wait for the component to mount before accessing localStorage
+    setIsClient(true);
+    const savedPlayerName = localStorage.getItem("playerName");
+    setPlayerName(savedPlayerName);
+  }, []);
 
   const handlePlayClick = () => {
-    // See if playerName exists in localStorage
-    const playerName = localStorage.getItem("playerName");
-
+    // If playerName exists, navigate to levels, otherwise to onboarding
     if (playerName) {
       // Jump directly to levels if the name exists
       router.push("/levels");
@@ -20,6 +27,11 @@ export default function HomePage() {
       router.push("/onboarding");
     }
   };
+
+  // Show loading message while waiting for client-side rendering
+  if (!isClient) {
+    return <div>Laddar...</div>;
+  }
 
   return (
     <main className={styles.container}>

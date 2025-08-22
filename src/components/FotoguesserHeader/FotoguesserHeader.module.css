@@ -1,29 +1,29 @@
 .headerSection {
-    width: 100%;
-    max-width: 26rem;
-    display: flex;
-    align-items: center; /* Centrerar vertikalt */
-    justify-content: center; /* Centrerar innehållet */
-    position: relative; /* För att kunna positionera arrow absolut */
-    margin: 0 auto;
-    padding-top: 3.84rem;
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  align-items: center; /* Centrerar vertikalt */
+  justify-content: center; /* Centrerar innehållet */
+  position: relative; /* För att kunna positionera arrow absolut */
+  margin: 0 auto;
+  padding-top: 1.1rem;
 }
 
 .arrowIcon {
-    position: absolute;
-    left: 2.5rem; /* Placerar till vänster */
-    width: 2.18363rem;
-    height: 2.18363rem;
-    flex-shrink: 0;
+  position: absolute;
+  left: 2.5rem; /* Placerar till vänster */
+  width: 2.18363rem;
+  height: 2.18363rem;
+  flex-shrink: 0;
 }
 
 .headerH1 {
-    color: var(--Sandstone, #5E5C20);
-    font-family: Kritik-Trial;
-    font-size: 1.375rem;
-    font-style: normal;
-    font-weight: 900;
-    line-height: normal;
-    margin: 0; /* Ta bort margin auto */
-    text-align: center;
+  color: var(--Sandstone, #5e5c20);
+  font-family: Kritik-Trial;
+  font-size: 1.375rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  margin: 0; /* Ta bort margin auto */
+  text-align: center;
 }
