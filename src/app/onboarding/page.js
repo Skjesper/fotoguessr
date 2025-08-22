@@ -1,24 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import FotoguesserHeader from "@/components/FotoguesserHeader/FotoguesserHeader";
 import styles from "./page.module.css";
-import Router from "next/router";
 
 export default function OnboardingPage() {
   const [name, setName] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const handleSaveAndPlay = () => {
-    if (name.trim()) {
+    if (name.trim() && isClient) {
       localStorage.setItem("playerName", name.trim());
       router.push("/levels");
     }
   };
 
   const handlePlayAsGuest = () => {
-    localStorage.removeItem("playerName"); // Removes saved player names from local storage
+    if (isClient) {
+      localStorage.removeItem("playerName");
+    }
     router.push("/levels");
   };
 
@@ -28,7 +34,7 @@ export default function OnboardingPage() {
 
   return (
     <main className={styles.maincontainer}>
-      <FotoguesserHeader onArrowClick={() => router.back()} />
+      <FotoguesserHeader onArrowClick={handleBack} />
 
       <div className={styles.content}>
         <p className={styles.description}>
