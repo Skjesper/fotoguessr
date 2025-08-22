@@ -30,6 +30,7 @@
   border-color: var(--Morning-sky, #cbd9f4);
   background: var(--Morning-sky, #cbd9f4);
   color: var(--Midnight-blue-100, #002732);
+  border: 2px solid var(--Midnight-blue-100, #002732);
 }
 
 /* Icon styling */

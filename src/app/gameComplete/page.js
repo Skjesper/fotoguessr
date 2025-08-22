@@ -1,5 +1,5 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import styles from "./page.module.css";
 import FotoguesserHeader from "@/components/FotoguesserHeader/FotoguesserHeader";
@@ -33,6 +33,33 @@ function GameCompleteContent() {
   };
 
   const starsEarned = calculateStars();
+
+  // Spara poäng automatiskt när sidan laddas
+  useEffect(() => {
+    const submitScore = async () => {
+      if (starsEarned > 0) {
+        const playerName = localStorage.getItem("playerName");
+        if (playerName) {
+          try {
+            await fetch("/api/leaderboard", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: playerName,
+                score: starsEarned,
+                action: "add",
+              }),
+            });
+            console.log(`Sparade ${starsEarned} stjärnor för ${playerName}`);
+          } catch (error) {
+            console.error("Error submitting score:", error);
+          }
+        }
+      }
+    };
+
+    submitScore();
+  }, [starsEarned]);
 
   // Formatera tid för visning
   const formatTime = (seconds) => {
@@ -79,13 +106,16 @@ function GameCompleteContent() {
               src={`https://maps.googleapis.com/maps/api/staticmap?center=${targetLat},${targetLng}&zoom=16&size=300x200&markers=color:red%7C${targetLat},${targetLng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
               alt="Målplats på karta"
               className={styles.mapImage}
-              onClick={() => window.open(`https://maps.google.com/?q=${targetLat},${targetLng}`, '_blank')}
-              style={{ cursor: 'pointer' }}
+              onClick={() =>
+                window.open(
+                  `https://maps.google.com/?q=${targetLat},${targetLng}`,
+                  "_blank"
+                )
+              }
+              style={{ cursor: "pointer" }}
             />
           </div>
-
-          )}
-        
+        )}
 
         <Button
           href="/"
@@ -97,7 +127,7 @@ function GameCompleteContent() {
           Hem
         </Button>
         <Button
-          href={`/leaderboard?stars=${starsEarned}&level=${level}`}
+          href="/leaderboard"
           variant="light"
           icon={
             <Image src="/trophy-dark.svg" alt="Trophy" width={16} height={16} />

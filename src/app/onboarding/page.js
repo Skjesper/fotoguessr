@@ -55,13 +55,13 @@ export default function OnboardingPage() {
         <div className={styles.buttonSection}>
           <Button
             onClick={handleSaveAndPlay}
-            variant="primary"
+            variant="dark"
             disabled={!name.trim()}
           >
             Spara & spela
           </Button>
 
-          <Button onClick={handlePlayAsGuest} variant="secondary">
+          <Button onClick={handlePlayAsGuest} variant="light">
             Spela som gäst
           </Button>
         </div>
