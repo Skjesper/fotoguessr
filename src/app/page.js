@@ -1,8 +1,26 @@
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import Button from "@/components/Button";
 import Image from "next/image";
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const handlePlayClick = () => {
+    // See if playerName exists in localStorage
+    const playerName = localStorage.getItem("playerName");
+
+    if (playerName) {
+      // Jump directly to levels if the name exists
+      router.push("/levels");
+    } else {
+      // Go to onboarding if no name is saved
+      router.push("/onboarding");
+    }
+  };
+
   return (
     <main className={styles.container}>
       <section className={styles.section}>
@@ -15,7 +33,7 @@ export default function HomePage() {
           </p>
         </div>
         <div className={styles.buttonContainer}>
-          <Button href="/onboarding" variant="dark">
+          <Button onClick={handlePlayClick} variant="dark">
             Spela
           </Button>
           <Button
