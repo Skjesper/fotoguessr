@@ -93,17 +93,17 @@ function GamePageContent() {
     1: {
       timeSlot: "08:00-11:00",
       unlockTime: "11:00",
-      duration: 1800
+      duration: 180
     },
     2: {
       timeSlot: "11:00-13:00", 
       unlockTime: "13:00",
-      duration: 1800
+      duration: 180
     },
     3: {
       timeSlot: "13:00-17:00",
       unlockTime: "17:00", 
-      duration: 1800
+      duration: 180
     }
   };
 
