@@ -1,7 +1,7 @@
 /* Base button styles */
 .button {
   display: inline-flex;
-  padding: 0.9375rem 1.5625rem;
+  padding: 0.7rem 1.5625rem;
   justify-content: center;
   align-items: center;
   gap: 0.625rem;

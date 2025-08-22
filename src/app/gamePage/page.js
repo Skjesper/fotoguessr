@@ -27,29 +27,37 @@ function GamePageContent() {
     }
   }, [searchParams]);
 
-  // Generera slumpmässig koordinat mellan 150-300m från användarens position
+  // Generera slumpmässig koordinat mellan 30-50m från användarens position (för testing)
   const generateRandomLocation = (centerLat, centerLng) => {
-    const minDistance = 150;
-    const maxDistance = 300;
+    const minDistance = 30;
+    const maxDistance = 50;
     const distance = minDistance + Math.random() * (maxDistance - minDistance);
     
+    // Korrekt konvertering till grader (1 grad ≈ 111,320 meter vid ekvatorn)
     const radiusInDegrees = distance / 111320;
     const angle = Math.random() * 2 * Math.PI;
     
     const deltaLat = radiusInDegrees * Math.cos(angle);
+    // Justera för latitud (längdgrader blir kortare när man går norrut)
     const deltaLng = radiusInDegrees * Math.sin(angle) / Math.cos(centerLat * Math.PI / 180);
     
-    return {
+    const newLocation = {
       lat: centerLat + deltaLat,
       lng: centerLng + deltaLng
     };
+    
+    // Verifiera avståndet med Vincenty för att säkerställa korrekthet
+    const actualDistance = calculateDistance(centerLat, centerLng, newLocation.lat, newLocation.lng);
+    console.log(`Genererat mål på ${actualDistance.toFixed(1)} meter avstånd (target: ${distance.toFixed(1)}m)`);
+    
+    return newLocation;
   };
 
   // Hämta GPS och generera spel-plats
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const userPos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
@@ -60,7 +68,7 @@ function GamePageContent() {
           setGameLocation(randomLocation);
         },
         (error) => {
-          console.error('GPS fel:', error);
+          console.warn('GPS fel:', error);
           // Ingen fallback - låt gameLocation vara null
         },
         {
@@ -96,26 +104,82 @@ function GamePageContent() {
 
   const currentLevelData = levelData[currentLevel] || levelData[1];
 
-  // Superenkel approximation för Sverige
+  // Vincenty formula för exakt cirkel-avstånd (fågelvägen) - perfekt för area-kontroll
   const calculateDistance = (lat1, lng1, lat2, lng2) => {
-    const latDiff = (lat2 - lat1) * 111000; // ~111km per grad latitud
-    const lngDiff = (lng2 - lng1) * 61000;  // ~61km per grad longitud i Sverige
+    const a = 6378137; // WGS-84 major axis (meter)
+    const b = 6356752.314245; // WGS-84 minor axis (meter)  
+    const f = 1/298.257223563; // WGS-84 flattening
     
-    return Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
+    const L = (lng2 - lng1) * Math.PI / 180;
+    const U1 = Math.atan((1 - f) * Math.tan(lat1 * Math.PI / 180));
+    const U2 = Math.atan((1 - f) * Math.tan(lat2 * Math.PI / 180));
+    const sinU1 = Math.sin(U1);
+    const cosU1 = Math.cos(U1);
+    const sinU2 = Math.sin(U2);
+    const cosU2 = Math.cos(U2);
+    
+    let lambda = L;
+    let lambdaP;
+    let iterLimit = 100;
+    let cosSqAlpha, sinSigma, cos2SigmaM, cosSigma, sigma;
+    
+    do {
+      const sinLambda = Math.sin(lambda);
+      const cosLambda = Math.cos(lambda);
+      sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) + 
+        (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
+      
+      if (sinSigma === 0) return 0; // Samma punkt
+      
+      cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      const sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;
+      cosSqAlpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha;
+      
+      if (isNaN(cos2SigmaM)) cos2SigmaM = 0; // Ekvatorial linje
+      
+      const C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+      lambdaP = lambda;
+      lambda = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma * 
+        (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+    } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+    
+    if (iterLimit === 0) {
+      console.warn('Vincenty formula konvergerade inte');
+      return NaN;
+    }
+    
+    const uSq = cosSqAlpha * (a * a - b * b) / (b * b);
+    const A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
+    const B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+    const deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * 
+      (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM * 
+      (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    
+    const distance = b * A * (sigma - deltaSigma);
+    
+    return distance; // Exakt cirkel-avstånd i meter
   };
 
   // Kontrollera om användaren är inom 25 meter från målet och navigera till gameComplete
   const checkIfNearTarget = () => {
-    if (!userLocation || !gameLocation) {
-      console.log('Saknar position data');
+    if (!gameLocation) {
+      console.log('Saknar spel-plats data');
       return;
     }
 
+    console.log('Hämtar aktuell GPS-position...');
+    
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const currentLat = position.coords.latitude;
         const currentLng = position.coords.longitude;
         
+        console.log(`Nuvarande position: ${currentLat}, ${currentLng}`);
+        console.log(`Målposition: ${gameLocation.lat}, ${gameLocation.lng}`);
+        
+        // Använd Vincenty för exakt cirkel-avstånd med dynamisk radie
         const distance = calculateDistance(
           currentLat, 
           currentLng, 
@@ -123,10 +187,24 @@ function GamePageContent() {
           gameLocation.lng
         );
 
-        const success = distance <= 25;
+        // Dynamisk radie baserat på GPS-noggrannhet
+        const gpsAccuracy = position.coords.accuracy;
+        const baseRadius = 25; // Grundradie
+        const accuracyBuffer = Math.max(0, gpsAccuracy - 10); // Extra buffert om GPS är sämre än 10m
+        const dynamicRadius = baseRadius + accuracyBuffer;
         
-        console.log(`Avstånd till mål: ${distance.toFixed(1)} meter`);
-        console.log(success ? 'OK - Du är inom 25 meter från målet!' : `För långt bort - du behöver komma ${(distance - 25).toFixed(1)} meter närmre`);
+        const success = distance <= dynamicRadius;
+        
+        console.log(`Cirkel-avstånd till mål: ${distance.toFixed(1)} meter`);
+        console.log(`GPS-noggrannhet: ${gpsAccuracy.toFixed(1)}m`);
+        console.log(`Dynamisk acceptans-radie: ${dynamicRadius.toFixed(1)}m`);
+        console.log(`Resultat: ${success ? 'GODKÄNT' : 'FÖR LÅNGT BORT'} (inom ${dynamicRadius.toFixed(1)}m radie: ${success})`);
+        
+        // Uppdatera användarens position med den senaste
+        setUserLocation({
+          lat: currentLat,
+          lng: currentLng
+        });
         
         // Navigera till gameComplete med resultat OCH koordinater
         const params = new URLSearchParams({
@@ -136,13 +214,16 @@ function GamePageContent() {
           target: success ? 'reached' : 'missed',
           timeRemaining: timeRemaining.toFixed(0),
           targetLat: gameLocation.lat.toString(),
-          targetLng: gameLocation.lng.toString()
+          targetLng: gameLocation.lng.toString(),
+          userLat: currentLat.toString(),
+          userLng: currentLng.toString(),
+          accuracy: position.coords.accuracy.toFixed(1)
         });
         
         router.push(`/gameComplete?${params.toString()}`);
       },
       (error) => {
-        console.error('Kunde inte hämta nuvarande position:', error);
+        console.warn('Kunde inte hämta nuvarande position:', error);
         // Navigera till gameComplete med fel
         const params = new URLSearchParams({
           level: currentLevel.toString(),
@@ -159,8 +240,8 @@ function GamePageContent() {
       },
       {
         enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 30000
+        timeout: 15000,
+        maximumAge: 0
       }
     );
   };
@@ -202,7 +283,7 @@ function GamePageContent() {
                 progress={progress}
               />
             ) : (
-              <div>Om du ser det här meddelandet, kolla så att du har godkänt att dela din plats</div>
+              <div className={styles.infoMessage}>Om du ser det här meddelandet. Se till så att du har godkänt att dela din plats.</div>
             )}
           </div>
         </div>

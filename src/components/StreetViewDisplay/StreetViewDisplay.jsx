@@ -5,7 +5,7 @@ const StreetViewDisplay = ({ location, progress = 0 }) => {
  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
  
 const getCurrentFOV = (progressValue) => {
-  if (progressValue < 0.2) return 5;  
+  if (progressValue < 0.2) return 60;  
   if (progressValue < 0.4) return 35;  
   if (progressValue < 0.6) return 60;  
   if (progressValue < 1.0) return 80;  

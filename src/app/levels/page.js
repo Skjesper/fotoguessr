@@ -18,7 +18,7 @@ export default function LevelsPage() {
 
   return (
     <main className={styles.mainContainer}>
-      <FotoguesserHeader onArrowClick={() => router.back()} />
+      <FotoguesserHeader onArrowClick={() => router.push('/')} />
       <div className={styles.content}>
         <h1 className={styles.title}>Utmaningar</h1>
         <section className={styles.levelsContainer}>

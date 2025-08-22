@@ -79,9 +79,13 @@ function GameCompleteContent() {
               src={`https://maps.googleapis.com/maps/api/staticmap?center=${targetLat},${targetLng}&zoom=16&size=300x200&markers=color:red%7C${targetLat},${targetLng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
               alt="Målplats på karta"
               className={styles.mapImage}
+              onClick={() => window.open(`https://maps.google.com/?q=${targetLat},${targetLng}`, '_blank')}
+              style={{ cursor: 'pointer' }}
             />
           </div>
-        )}
+
+          )}
+        
 
         <Button
           href="/"
