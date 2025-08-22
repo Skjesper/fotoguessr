@@ -55,7 +55,7 @@ function GameCompleteContent() {
           <>
             <h1 className={styles.title}>Grattis!</h1>
             <p className={styles.description}>
-              Du klarade Level {level} med{" "}
+              Du klarade det med{" "}
               <strong>{formatTime(secondsLeft)}</strong> kvar och var endast{" "}
               <strong>{distance} meter</strong> från målet! Du fick därför{" "}
               <strong>{starsEarned} av 3 stjärnor!</strong>
@@ -74,7 +74,7 @@ function GameCompleteContent() {
         {/* Visa karta med målplatsen */}
         {targetLat && targetLng && (
           <div className={styles.mapContainer}>
-            <h3 className={styles.mapTitle}>Här var målplatsen:</h3>
+            <h3 className={styles.mapTitle}>Tryck för att se målplatset</h3>
             <img
               src={`https://maps.googleapis.com/maps/api/staticmap?center=${targetLat},${targetLng}&zoom=16&size=300x200&markers=color:red%7C${targetLat},${targetLng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
               alt="Målplats på karta"
