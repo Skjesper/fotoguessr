@@ -1,4 +1,3 @@
-
 import styles from "./page.module.css";
 import Button from "@/components/Button";
 import Image from "next/image";
@@ -16,7 +15,7 @@ export default function HomePage() {
           </p>
         </div>
         <div className={styles.buttonContainer}>
-          <Button href="/levels" variant="dark">
+          <Button href="/onboarding" variant="dark">
             Spela
           </Button>
           <Button
