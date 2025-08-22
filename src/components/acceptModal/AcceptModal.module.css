@@ -14,11 +14,11 @@
 
 /* Modal-rutan */
 .modal {
-  background: white;
+  background: var(--Midnight-blue-100);
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 90%;
+  max-width: 500px;
+  width: 80%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -35,14 +35,16 @@
   margin: 0 0 16px 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1a1a1a;
+  font-family: Buvera;
+  color: var(--Morning-sky);
 }
 
 .message {
   margin: 0;
   font-size: 1rem;
   line-height: 1.5;
-  color: #4a4a4a;
+  font-family: Buvera;
+  color: var(--Morning-sky);
 }
 
 /* Knappar */
@@ -50,40 +52,42 @@
   padding: 16px 24px 24px 24px;
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: center;
+
 }
 
 .cancelButton {
   padding: 12px 24px;
-  border: 2px solid #e0e0e0;
-  background: white;
-  color: #666;
+  border: 2px solid var(--Morning-sky);
+  background: transparent;
+  color: var(--Morning-sky);
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 500;
+  font-family: Buvera;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .cancelButton:hover {
-  border-color: #c0c0c0;
-  color: #333;
+  background: rgba(203, 217, 244, 0.1);
 }
 
 .confirmButton {
   padding: 12px 24px;
   border: none;
-  background: #007bff;
-  color: white;
+  background: var(--Morning-sky);
+  color: var(--Midnight-blue-100);
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
+  font-family: Buvera;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .confirmButton:hover {
-  background: #0056b3;
+  background: #b3c7ee;
 }
 
 .confirmButton:active {
@@ -94,19 +98,3 @@
   transform: translateY(1px);
 }
 
-/* Responsiv design */
-@media (max-width: 480px) {
-  .modal {
-    width: 95%;
-    margin: 20px;
-  }
-  
-  .buttons {
-    flex-direction: column;
-  }
-  
-  .cancelButton,
-  .confirmButton {
-    width: 100%;
-  }
-}

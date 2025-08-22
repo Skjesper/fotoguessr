@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Timer from '@/components/Timer/Timer';
 import StreetViewDisplay from '@/components/StreetViewDisplay/StreetViewDisplay';
 import Button from '@/components/Button';
+import AcceptModal from '@/components/AcceptModal/AcceptModal';
 import styles from '@/app/gamePage/page.module.css';
 import UnlockTime from '@/components/UnlockTime/UnlockTime';
 import Minilevel from '@/components/MiniLevel/MiniLevel';
@@ -20,6 +21,7 @@ function GamePageContent() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [gpsStatus, setGpsStatus] = useState('loading'); // 'loading', 'success', 'error'
   const [isCheckingLocation, setIsCheckingLocation] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   
   // Läs level från URL parametrar
   useEffect(() => {
@@ -165,12 +167,17 @@ function GamePageContent() {
     return distance; // Exakt cirkel-avstånd i meter
   };
 
-  // Kontrollera om användaren är nära målet med GPS-uppdatering och laddning
-  const checkIfNearTarget = async () => {
+  // Hantera knapp-klick - visa modal först
+  const handleFrammeClick = () => {
     if (!gameLocation) {
       console.log('Saknar spel-plats data');
       return;
     }
+    setShowConfirmModal(true);
+  };
+
+  // Kontrollera om användaren är nära målet med GPS-uppdatering och laddning
+  const checkIfNearTarget = async () => {
 
     setIsCheckingLocation(true);
     console.log('🔍 Uppdaterar GPS-position...');
@@ -286,7 +293,7 @@ function GamePageContent() {
 
   return (
     <div>
-      <FotoguesserHeader />
+      <FotoguesserHeader onArrowClick={() => router.back()} />
       <section className={styles.gameSection}>
         <div className={styles.gameUi}>
           <Minilevel level={currentLevel} />
@@ -334,7 +341,7 @@ function GamePageContent() {
         <div className={styles.buttomUi}>
           <Button 
             variant="primary"
-            onClick={checkIfNearTarget}
+            onClick={handleFrammeClick}
             disabled={isCheckingLocation || !gameLocation}
           >
             {isCheckingLocation ? (
@@ -354,6 +361,9 @@ function GamePageContent() {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                   }
+                  button {
+                    font-family: Buvera !important;
+                  }
                 `}</style>
               </>
             ) : (
@@ -367,6 +377,19 @@ function GamePageContent() {
           </Button>
         </div>
       </section>
+
+      <AcceptModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={() => {
+          setShowConfirmModal(false);
+          checkIfNearTarget();
+        }}
+        title="Bekräfta din plats"
+        message="Är du säker på att du har kommit fram till rätt plats? Vi kommer att kontrollera din GPS-position."
+        confirmText="Framme!"
+        cancelText="Nej, inte än"
+      />
     </div>
   );
 }
