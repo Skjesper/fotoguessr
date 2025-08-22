@@ -10,8 +10,8 @@ export default function HomePage() {
           <Image src="/logo.svg" alt="App logo" width={115.094} height={122} />
           <h1 className={styles.title}>FOTOGUESSR</h1>
           <p className={styles.description}>
-            Gissa bilden, hitta platsen och tagga dig själv. Men låt inte dina
-            poäng ticka bort, för ju snabbare du är, desto fler poäng får du.
+            Gissa platsen utifrån en bild. Ta dig dit och bekräfta i appen för
+            poäng. Ju snabbare du är desto högre poäng får du.
           </p>
         </div>
         <div className={styles.buttonContainer}>
