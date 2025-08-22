@@ -54,7 +54,7 @@ export const isTimeSlotUnlocked = (timeSlot) => {
   const timeSlots = {
     "08:00-11:00": { start: 8 * 60, end: 11 * 60 },
     "11:00-13:00": { start: 11 * 60, end: 13 * 60 },
-    "13:00-19:00": { start: 13 * 60, end: 17 * 60 },
+    "13:00-17:00": { start: 13 * 60, end: 17 * 60 },
   };
 
   const slot = timeSlots[timeSlot];
