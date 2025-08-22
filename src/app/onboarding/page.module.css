@@ -1,0 +1,47 @@
+.maincontainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  width: 20.1875rem;
+  flex-direction: column;
+  /* align-items: center; */
+  gap: 1.6875rem;
+  margin-top: 2rem;
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4375rem;
+  align-self: stretch;
+}
+
+.label {
+  color: var(--Midnight-blue-100, #002732);
+  font-family: Buvera;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.nameInput {
+  width: 20.1875rem;
+  height: 4.6875rem;
+  border-radius: 0.8125rem;
+  border: 3px solid var(--Midnight-blue-50, rgba(0, 39, 50, 0.5));
+  background: var(--Vit, #fbfbfb);
+}
+
+.buttonSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.875rem;
+}
