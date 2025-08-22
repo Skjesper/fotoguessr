@@ -1,36 +1,64 @@
-'use client';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
+import Button from "@/components/Button";
+import Image from "next/image";
 
-import React from 'react';
+export default function HomePage() {
+  const router = useRouter();
+  const [playerName, setPlayerName] = useState(null);
+  const [isClient, setIsClient] = useState(false);
 
-const SimpleStreetView = () => {
-  // ERSÄTT MED DIN API-NYCKEL
-  const API_KEY = "AIzaSyC-8O9gK-7jLWE7iorMhwwSb4wTIIQt5ks";
-  
-  // Koordinater för Göteborg centrum
- const lat = 57.705418;  // 57°42'37.9"N
-  const lng = 11.936348;  // 11°56'19.9"E
-  
-  // Street View URL
-  const streetViewURL = `https://maps.googleapis.com/maps/api/streetview?size=640x400&location=${lat},${lng}&key=${API_KEY}`;
+  useEffect(() => {
+    // Wait for the component to mount before accessing localStorage
+    setIsClient(true);
+    const savedPlayerName = localStorage.getItem("playerName");
+    setPlayerName(savedPlayerName);
+  }, []);
+
+  const handlePlayClick = () => {
+    // If playerName exists, navigate to levels, otherwise to onboarding
+    if (playerName) {
+      // Jump directly to levels if the name exists
+      router.push("/levels");
+    } else {
+      // Go to onboarding if no name is saved
+      router.push("/onboarding");
+    }
+  };
+
+  // Show loading message while waiting for client-side rendering
+  if (!isClient) {
+    return <div>Laddar...</div>;
+  }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Street View Test</h1>
-      
-      <img 
-        src={streetViewURL}
-        alt="Street View"
-        style={{ 
-          width: '100%', 
-          maxWidth: '640px',
-          border: '1px solid #ccc'
-        }}
-      />
-      
-      <p>URL: {streetViewURL}</p>
-    </div>
+    <main className={styles.container}>
+      <section className={styles.section}>
+        <div className={styles.textImageContainer}>
+          <Image src="/logo.svg" alt="App logo" width={115.094} height={122} />
+          <h1 className={styles.title}>FOTOGUESSR</h1>
+          <p className={styles.description}>
+            Gissa platsen utifrån en bild. Ta dig dit och bekräfta i appen för
+            poäng. Ju snabbare du är desto högre poäng får du.
+          </p>
+        </div>
+        <div className={styles.buttonContainer}>
+          <Button onClick={handlePlayClick} variant="dark">
+            Spela
+          </Button>
+          <Button
+            href="/leaderboard"
+            variant="dark"
+            icon={
+              <Image src="/trophy.svg" alt="Trophy" width={16} height={16} />
+            }
+          >
+            Poängställning
+          </Button>
+        </div>
+      </section>
+    </main>
   );
-};
-
-export default SimpleStreetView;
-
+}

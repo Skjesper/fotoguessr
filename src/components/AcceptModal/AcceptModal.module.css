@@ -1,0 +1,100 @@
+/* Overlay - täcker hela skärmen */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal-rutan */
+.modal {
+  background: var(--Midnight-blue-100);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 80%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Innehåll */
+.content {
+  padding: 24px;
+  flex: 1;
+}
+
+.title {
+  margin: 0 0 16px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: Buvera;
+  color: var(--Morning-sky);
+}
+
+.message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: Buvera;
+  color: var(--Morning-sky);
+}
+
+/* Knappar */
+.buttons {
+  padding: 16px 24px 24px 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+
+}
+
+.cancelButton {
+  padding: 12px 24px;
+  border: 2px solid var(--Morning-sky);
+  background: transparent;
+  color: var(--Morning-sky);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: Buvera;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background: rgba(203, 217, 244, 0.1);
+}
+
+.confirmButton {
+  padding: 12px 24px;
+  border: none;
+  background: var(--Morning-sky);
+  color: var(--Midnight-blue-100);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: Buvera;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirmButton:hover {
+  background: #b3c7ee;
+}
+
+.confirmButton:active {
+  transform: translateY(1px);
+}
+
+.cancelButton:active {
+  transform: translateY(1px);
+}
+

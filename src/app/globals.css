@@ -1,6 +1,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --Summerday: #f8f251;
+  --Morning-sky: #cbd9f4;
+  --Midnight-blue-100: #002732;
+  --Midnight-blue-75: rgba(0, 39, 50, 0.75);
+  --Midnight-blue-50: rgba(0, 39, 50, 0.5);
+  --Sandstone: #5e5c20;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,10 +24,9 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--Morning-sky);
+  font-family: Buvera;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -31,7 +36,6 @@ body {
 }
 
 a {
-  color: inherit;
   text-decoration: none;
 }
 
@@ -39,4 +43,152 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-Black.woff") format("woff");
+  font-style: normal;
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-BlackItalic.woff") format("woff");
+  font-style: italic;
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-Bold.woff") format("woff");
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-BoldItalic.woff") format("woff");
+  font-style: italic;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-ExtraBold.woff") format("woff");
+  font-style: normal;
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-ExtraBoldItalic.woff") format("woff");
+  font-style: italic;
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-Medium.woff") format("woff");
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-MediumItalic.woff") format("woff");
+  font-style: italic;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-RegularItalic.woff") format("woff");
+  font-style: italic;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-SemiBold.woff") format("woff");
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Buvera;
+  src: url("/fonts/Buvera-SemiBoldItalic.woff") format("woff");
+  font-style: italic;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Kritik-Trial Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Regular"),
+    url("/fonts/Kritik-Trial-Regular-BF64d4435ca881b.woff") format("woff");
+}
+/* 
+@font-face {
+  font-family: "Kritik-Trial Light";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Light"),
+    url("Kritik-Trial-Light-BF64d4435c98236.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial Medium";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Medium"),
+    url("Kritik-Trial-Medium-BF64d4435c98e89.woff") format("woff");
+}
+
+
+@font-face {
+  font-family: "Kritik-Trial Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Bold"),
+    url("Kritik-Trial-Bold-BF64d4435c327b1.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial ExtraBold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial ExtraBold"),
+    url("Kritik-Trial-ExtraBold-BF64d4435cad2c0.woff") format("woff");
+} */
+
+@font-face {
+  font-family: "Kritik-Trial";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial Black"),
+    url("/fonts/Kritik-Trial-Black-BF64d4435ca3552.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Kritik-Trial SemiBold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Kritik-Trial SemiBold"),
+    url("/fonts/Kritik-Trial-SemiBold-BF64d4435c9fd0d.woff") format("woff");
 }
