@@ -33,8 +33,8 @@ function GamePageContent() {
 
   // Generera slumpmässig koordinat mellan 30-50m från användarens position (för testing)
   const generateRandomLocation = (centerLat, centerLng) => {
-    const minDistance = 50;
-    const maxDistance = 75;
+    const minDistance = 70;
+    const maxDistance = 90;
     const distance = minDistance + Math.random() * (maxDistance - minDistance);
     
     // Korrekt konvertering till grader (1 grad ≈ 111,320 meter vid ekvatorn)
