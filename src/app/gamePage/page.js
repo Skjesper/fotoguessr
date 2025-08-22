@@ -18,6 +18,8 @@ function GamePageContent() {
   const [gameLocation, setGameLocation] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [gpsStatus, setGpsStatus] = useState('loading'); // 'loading', 'success', 'error'
+  const [isCheckingLocation, setIsCheckingLocation] = useState(false);
   
   // Läs level från URL parametrar
   useEffect(() => {
@@ -55,32 +57,33 @@ function GamePageContent() {
 
   // Hämta GPS och generera spel-plats
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const userPos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          setUserLocation(userPos);
-          
-          const randomLocation = generateRandomLocation(userPos.lat, userPos.lng);
-          setGameLocation(randomLocation);
-        },
-        (error) => {
-          console.warn('GPS fel:', error);
-          // Ingen fallback - låt gameLocation vara null
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 60000
-        }
-      );
-    } else {
-      // Ingen fallback - låt gameLocation vara null
+    if (!navigator.geolocation) {
       console.log('GPS inte tillgängligt');
+      setGpsStatus('error');
+      return;
     }
+
+    // Snabb GPS-hämtning för initial laddning
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userPos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        setUserLocation(userPos);
+        setGameLocation(generateRandomLocation(userPos.lat, userPos.lng));
+        setGpsStatus('success');
+      },
+      (error) => {
+        console.warn('GPS fel:', error);
+        setGpsStatus('error');
+      },
+      {
+        enableHighAccuracy: false, // Snabbare för initial laddning
+        timeout: 8000,
+        maximumAge: 60000 // Bara för initial laddning - acceptera 1 min gammal
+      }
+    );
   }, []);
 
   // Level-specific data
@@ -162,88 +165,110 @@ function GamePageContent() {
     return distance; // Exakt cirkel-avstånd i meter
   };
 
-  // Kontrollera om användaren är inom 25 meter från målet och navigera till gameComplete
-  const checkIfNearTarget = () => {
+  // Kontrollera om användaren är nära målet med GPS-uppdatering och laddning
+  const checkIfNearTarget = async () => {
     if (!gameLocation) {
       console.log('Saknar spel-plats data');
       return;
     }
 
-    console.log('Hämtar aktuell GPS-position...');
-    
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const currentLat = position.coords.latitude;
-        const currentLng = position.coords.longitude;
-        
-        console.log(`Nuvarande position: ${currentLat}, ${currentLng}`);
-        console.log(`Målposition: ${gameLocation.lat}, ${gameLocation.lng}`);
-        
-        // Använd Vincenty för exakt cirkel-avstånd med dynamisk radie
-        const distance = calculateDistance(
-          currentLat, 
-          currentLng, 
-          gameLocation.lat, 
-          gameLocation.lng
-        );
+    setIsCheckingLocation(true);
+    console.log('🔍 Uppdaterar GPS-position...');
 
-        // Dynamisk radie baserat på GPS-noggrannhet
-        const gpsAccuracy = position.coords.accuracy;
-        const baseRadius = 25; // Grundradie
-        const accuracyBuffer = Math.max(0, gpsAccuracy - 10); // Extra buffert om GPS är sämre än 10m
-        const dynamicRadius = baseRadius + accuracyBuffer;
-        
-        const success = distance <= dynamicRadius;
-        
-        console.log(`Cirkel-avstånd till mål: ${distance.toFixed(1)} meter`);
-        console.log(`GPS-noggrannhet: ${gpsAccuracy.toFixed(1)}m`);
-        console.log(`Dynamisk acceptans-radie: ${dynamicRadius.toFixed(1)}m`);
-        console.log(`Resultat: ${success ? 'GODKÄNT' : 'FÖR LÅNGT BORT'} (inom ${dynamicRadius.toFixed(1)}m radie: ${success})`);
-        
-        // Uppdatera användarens position med den senaste
-        setUserLocation({
-          lat: currentLat,
-          lng: currentLng
-        });
-        
-        // Navigera till gameComplete med resultat OCH koordinater
-        const params = new URLSearchParams({
-          level: currentLevel.toString(),
-          success: success.toString(),
-          distance: distance.toFixed(1),
-          target: success ? 'reached' : 'missed',
-          timeRemaining: timeRemaining.toFixed(0),
-          targetLat: gameLocation.lat.toString(),
-          targetLng: gameLocation.lng.toString(),
-          userLat: currentLat.toString(),
-          userLng: currentLng.toString(),
-          accuracy: position.coords.accuracy.toFixed(1)
-        });
-        
-        router.push(`/gameComplete?${params.toString()}`);
-      },
-      (error) => {
-        console.warn('Kunde inte hämta nuvarande position:', error);
-        // Navigera till gameComplete med fel
-        const params = new URLSearchParams({
-          level: currentLevel.toString(),
-          success: 'false',
-          distance: 'unknown',
-          target: 'error',
-          error: 'GPS fel',
-          timeRemaining: timeRemaining.toFixed(0),
-          targetLat: gameLocation.lat.toString(),
-          targetLng: gameLocation.lng.toString()
-        });
-        
-        router.push(`/gameComplete?${params.toString()}`);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0
-      }
-    );
+    try {
+      // Vänta minst 3 sekunder för bättre UX
+      const [position] = await Promise.all([
+        new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            resolve,
+            reject,
+            {
+              enableHighAccuracy: true,
+              timeout: 15000,
+              maximumAge: 0 // Tvinga ny GPS-läsning
+            }
+          );
+        }),
+        new Promise(resolve => setTimeout(resolve, 3000)) // Minst 3 sekunder
+      ]);
+
+      const currentLat = position.coords.latitude;
+      const currentLng = position.coords.longitude;
+      
+      console.log(`Nuvarande position: ${currentLat}, ${currentLng}`);
+      console.log(`Målposition: ${gameLocation.lat}, ${gameLocation.lng}`);
+      
+      // Använd Vincenty för exakt cirkel-avstånd med dynamisk radie
+      const distance = calculateDistance(
+        currentLat, 
+        currentLng, 
+        gameLocation.lat, 
+        gameLocation.lng
+      );
+
+      // Dynamisk radie för urban miljö med byggnader/skolor
+      const gpsAccuracy = position.coords.accuracy;
+      const urbanBaseRadius = 45;
+      const minRadius = 35;
+      const maxRadius = 80;
+      
+      const accuracyBuffer = Math.min(
+        Math.max(10, gpsAccuracy * 0.8),
+        35
+      );
+      
+      const dynamicRadius = Math.max(
+        minRadius, 
+        Math.min(maxRadius, urbanBaseRadius + accuracyBuffer)
+      );
+      
+      const success = distance <= dynamicRadius;
+      
+      console.log(`Cirkel-avstånd till mål: ${distance.toFixed(1)} meter`);
+      console.log(`GPS-noggrannhet: ${gpsAccuracy.toFixed(1)}m`);
+      console.log(`Dynamisk acceptans-radie: ${dynamicRadius.toFixed(1)}m`);
+      console.log(`Resultat: ${success ? 'GODKÄNT' : 'FÖR LÅNGT BORT'}`);
+      
+      // Uppdatera användarens position
+      setUserLocation({
+        lat: currentLat,
+        lng: currentLng
+      });
+      
+      // Navigera till gameComplete
+      const params = new URLSearchParams({
+        level: currentLevel.toString(),
+        success: success.toString(),
+        distance: distance.toFixed(1),
+        target: success ? 'reached' : 'missed',
+        timeRemaining: timeRemaining.toFixed(0),
+        targetLat: gameLocation.lat.toString(),
+        targetLng: gameLocation.lng.toString(),
+        userLat: currentLat.toString(),
+        userLng: currentLng.toString(),
+        accuracy: position.coords.accuracy.toFixed(1)
+      });
+      
+      router.push(`/gameComplete?${params.toString()}`);
+      
+    } catch (error) {
+      console.warn('GPS-uppdatering misslyckades:', error);
+      setIsCheckingLocation(false);
+      
+      // Navigera med fel-information
+      const params = new URLSearchParams({
+        level: currentLevel.toString(),
+        success: 'false',
+        distance: 'unknown',
+        target: 'error',
+        error: 'GPS fel',
+        timeRemaining: timeRemaining.toFixed(0),
+        targetLat: gameLocation.lat.toString(),
+        targetLng: gameLocation.lng.toString()
+      });
+      
+      router.push(`/gameComplete?${params.toString()}`);
+    }
   };
 
   const handleProgress = (progressValue) => {
@@ -282,8 +307,26 @@ function GamePageContent() {
                 location={gameLocation}
                 progress={progress}
               />
+            ) : gpsStatus === 'loading' ? (
+              <div className={styles.infoMessage}>
+                <h3>🔍 Hämtar din plats...</h3>
+                <p>Detta kan ta några sekunder</p>
+              </div>
+            ) : gpsStatus === 'error' ? (
+              <div className={styles.infoMessage}>
+                <h3>⚠️ GPS-problem</h3>
+                <p>Kontrollera att:</p>
+                <ul>
+                  <li>Plats-åtkomst är godkänd</li>
+                  <li>Du är utomhus eller nära fönster</li>
+                  <li>Plats-tjänster är aktiverade</li>
+                </ul>
+                <button onClick={() => window.location.reload()}>🔄 Försök igen</button>
+              </div>
             ) : (
-              <div className={styles.infoMessage}>Om du ser det här meddelandet. Se till så att du har godkänt att dela din plats.</div>
+              <div className={styles.infoMessage}>
+                <h3>Laddar...</h3>
+              </div>
             )}
           </div>
         </div>
@@ -292,11 +335,35 @@ function GamePageContent() {
           <Button 
             variant="primary"
             onClick={checkIfNearTarget}
+            disabled={isCheckingLocation || !gameLocation}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="23" viewBox="0 0 18 23" fill="none">
-              <path fillRule="evenodd" clipRule="evenodd" d="M9 0C4.02975 0 0 4.60355 0 9.77522C0 14.9066 2.87212 20.4843 7.35412 22.6256C7.86928 22.8722 8.43116 23 9 23C9.56884 23 10.1307 22.8722 10.6459 22.6256C15.1279 20.4843 18 14.9066 18 9.77522C18 4.60355 13.9703 0 9 0ZM9 11.5003C9.59674 11.5003 10.169 11.2579 10.591 10.8266C11.0129 10.3952 11.25 9.81021 11.25 9.2002C11.25 8.59019 11.0129 8.00517 10.591 7.57382C10.169 7.14248 9.59674 6.90015 9 6.90015C8.40326 6.90015 7.83097 7.14248 7.40901 7.57382C6.98705 8.00517 6.75 8.59019 6.75 9.2002C6.75 9.81021 6.98705 10.3952 7.40901 10.8266C7.83097 11.2579 8.40326 11.5003 9 11.5003Z" fill="#CBD9F4"/>
-            </svg>
-            Tagga plats
+            {isCheckingLocation ? (
+              <>
+                <div style={{
+                  width: '18px',
+                  height: '18px',
+                  border: '2px solid #CBD9F4',
+                  borderTop: '2px solid transparent',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  marginRight: '8px'
+                }}></div>
+                Uppdaterar GPS...
+                <style jsx>{`
+                  @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                  }
+                `}</style>
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="23" viewBox="0 0 18 23" fill="none">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M9 0C4.02975 0 0 4.60355 0 9.77522C0 14.9066 2.87212 20.4843 7.35412 22.6256C7.86928 22.8722 8.43116 23 9 23C9.56884 23 10.1307 22.8722 10.6459 22.6256C15.1279 20.4843 18 14.9066 18 9.77522C18 4.60355 13.9703 0 9 0ZM9 11.5003C9.59674 11.5003 10.169 11.2579 10.591 10.8266C11.0129 10.3952 11.25 9.81021 11.25 9.2002C11.25 8.59019 11.0129 8.00517 10.591 7.57382C10.169 7.14248 9.59674 6.90015 9 6.90015C8.40326 6.90015 7.83097 7.14248 7.40901 7.57382C6.98705 8.00517 6.75 8.59019 6.75 9.2002C6.75 9.81021 6.98705 10.3952 7.40901 10.8266C7.83097 11.2579 8.40326 11.5003 9 11.5003Z" fill="#CBD9F4"/>
+                </svg>
+                Tagga plats
+              </>
+            )}
           </Button>
         </div>
       </section>
