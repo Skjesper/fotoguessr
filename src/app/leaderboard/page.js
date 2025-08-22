@@ -1,10 +1,12 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import styles from "./leaderboard.module.css";
-import FotoguesserHeader from "@/components/FotoguesserHeader/FotoguesserHeader";
+import { Suspense } from 'react';
 
-export default function LeaderboardPage() {
+function LeaderboardContent() {
+  "use client";
+  const { useEffect, useState } = require("react");
+  const { useRouter, useSearchParams } = require("next/navigation");
+  const styles = require("./leaderboard.module.css");
+  const FotoguesserHeader = require("@/components/FotoguesserHeader/FotoguesserHeader").default;
+
   const [leaders, setLeaders] = useState([]);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,5 +79,13 @@ export default function LeaderboardPage() {
         </ul>
       </div>
     </div>
+  );
+}
+
+export default function LeaderboardPage() {
+  return (
+    <Suspense fallback={<div>Laddar leaderboard...</div>}>
+      <LeaderboardContent />
+    </Suspense>
   );
 }
