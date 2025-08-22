@@ -62,7 +62,6 @@
   width: 3.1875rem;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
 }
 
 /* unlocked/locked modifiers (targeting ancestor class) */
