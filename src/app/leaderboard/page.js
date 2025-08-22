@@ -1,7 +1,8 @@
+  "use client";
 import { Suspense } from 'react';
 
 function LeaderboardContent() {
-  "use client";
+
   const { useEffect, useState } = require("react");
   const { useRouter, useSearchParams } = require("next/navigation");
   const styles = require("./leaderboard.module.css");
