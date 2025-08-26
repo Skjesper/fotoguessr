@@ -1,4 +1,4 @@
-# LindholmenGuesser 🎯
+# fotoguessr 🎯
 
 A location-based guessing game built with Next.js where players guess locations from images, navigate to them in real life, and earn stars based on their speed. Features a comprehensive leaderboard system with Supabase integration.
 
