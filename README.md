@@ -1,16 +1,16 @@
-# fotoguessr 🎯
+# fotoguessr
 
 A location-based guessing game built with Next.js where players guess locations from images, navigate to them in real life, and earn stars based on their speed. Features a comprehensive leaderboard system with Supabase integration.
 
 ## Features
 
-- 🗺️ **Google Street View Integration** - Display interactive street view images using Google Maps API
-- 📍 **Real-world Navigation** - Players must physically visit guessed locations
-- ⭐ **Star-based Scoring System** - Earn 1-3 stars based on time remaining
-- 🏆 **Dynamic Leaderboard** - Persistent scoring with Supabase database
-- 👤 **Player Profiles** - Save player names in localStorage with automatic score tracking
-- ⏰ **Time-based Levels** - Multiple daily challenges (08:00-11:00, 11:00-13:00, 13:00-19:00)
-- 🎮 **Complete Game Flow** - Onboarding → Levels → Game → Results → Leaderboard
+- **Google Street View Integration** - Display interactive street view images using Google Maps API
+- **Real-world Navigation** - Players must physically visit guessed locations
+- **Star-based Scoring System** - Earn 1-3 stars based on time remaining
+- **Dynamic Leaderboard** - Persistent scoring with Supabase database
+- **Player Profiles** - Save player names in localStorage with automatic score tracking
+- **Time-based Levels** - Multiple daily challenges (08:00-11:00, 11:00-13:00, 13:00-19:00)
+- **Complete Game Flow** - Onboarding → Levels → Game → Results → Leaderboard
 
 ## Tech Stack
 
